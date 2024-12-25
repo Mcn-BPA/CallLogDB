@@ -5,8 +5,8 @@ class Call:
     """
         Класс c информацией о звонке
     """
-    def __init__(self, callid:str, type:str, status:str, hangup_reason:str, date:str, answer_date:str, end_date:str, billsec:str,\
-                talktime:str, waittime:str, dst_num:str, dst_name:str, dst_type:str, src_num:str, src_name:str, src_type:str,\
+    def __init__(self, callid:str, type:str, status:str, hangup_reason:str, date:str, answer_date:str, end_date:str, billsec:str,
+                talktime:str, waittime:str, dst_num:str, dst_name:str, dst_type:str, src_num:str, src_name:str, src_type:str,
                 did:str, did_num:str, events_count:str, has_record:str):
                                 
                                 #* Пример:
