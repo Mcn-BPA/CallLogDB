@@ -1,6 +1,6 @@
 """ 
 Файл для создания модуля программы
 """
-from .insert_error_in_db import AddError
+from .AddError import AddError
 
 __all__ = ["AddError"]
