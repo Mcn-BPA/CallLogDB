@@ -30,8 +30,6 @@ class Call:
         self.__has_record = has_record # 1
 
         self.__events = []  
-        self.__apivars = [] 
-        self.__last_event = None
         
     def get_callid(self):
         """Возвращает call_id звонка
@@ -225,18 +223,3 @@ class Call:
         """
         self.__events.append(event)
     
-    def add_apivars(self, apivars):
-        """Добавление данных из элемента apivars
-
-        Args:
-            apivars (ApiVars): Элемент apivars
-        """
-        self.__apivars.append(apivars)
-    
-    def add_last_event(self, event):
-        """Добавление последнего ивента
-
-        Args:
-            event (Event): Ивент
-        """
-        self.__last_event = event

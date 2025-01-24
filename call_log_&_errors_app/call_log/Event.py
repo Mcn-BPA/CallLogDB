@@ -1,21 +1,12 @@
-
-
-class ApiVars:
-    """
-        Класс для информации о api_vars звонка
-    """
-    def __init__(self):
-        pass  
-    
-
+   
 class Event:
     """
         Класс для информации об ивентах звонка
     """
-    def __init__(self, evet_type:str, event_end_time:str, event_talk_time:str, event_wait_time:str, event_start_time:str, event_total_time:str,\
-                event_answer_time:str, event_rec_filename:str, event_transfered_from:str, event_leg_link_uniqueid_orig:str, apivars:ApiVars):
+    def __init__(self, event_type:str, event_end_time:str, event_talk_time:str, event_wait_time:str, event_start_time:str, event_total_time:str,
+                event_answer_time:str, event_rec_filename:str, event_transfered_from:str, event_leg_link_uniqueid_orig:str):
         
-        self.__evet_type = evet_type
+        self.__event_type = event_type
         self.__event_end_time = event_end_time
         self.__event_talk_time = event_talk_time
         self.__event_wait_time = event_wait_time
@@ -25,16 +16,15 @@ class Event:
         self.__event_rec_filename = event_rec_filename
         self.__event_transfered_from = event_transfered_from
         self.__event_leg_link_uniqueid_orig = event_leg_link_uniqueid_orig
+
         
-        self.__apivars = apivars
-        
-    def get_evet_type(self):
+    def get_event_type(self):
         """Возвращает тип ивента
 
         Returns:
             str: Тип ивента
         """
-        return self.__evet_type
+        return self.__event_type
     
     def get_event_end_time(self):
         """Возвращает дату и время конца ивента
