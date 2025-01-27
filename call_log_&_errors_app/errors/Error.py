@@ -4,14 +4,14 @@ class  Error:
     """
         Класс для информации об ошибках
     """
-    def __init__(self, script_name:str, error_code:str, error_text:str, error_date:str):
+    def __init__(self, script_path:str, error_code:str, error_text:str, error_date:str):
         config = configparser.ConfigParser()
         config.read('settings/setting.ini')
         
         self.__error_code = error_code
         self.__error_text = error_text
         self.__error_date = error_date
-        self.__script_name = script_name
+        self.__script_path = script_path
         self.__client_ls = config['DATA_CLIENT']['client_ls']
         self.__client_name = config['DATA_CLIENT']['client_name']
         self.__server_name = config['DATA_CLIENT']['server_name']
@@ -62,7 +62,7 @@ class  Error:
         Returns:
             str: Путь к файлу с ошибкой
         """
-        return self.__script_name
+        return self.__script_path
     
     def get_server_name(self):
         """Возвращает название хоста со скриптом

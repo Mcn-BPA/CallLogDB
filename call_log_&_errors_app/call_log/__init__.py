@@ -1,6 +1,6 @@
 """ 
 Файл для создания модуля программы
 """
-from .call_log_data import GetDataFromCallLog
+from .Call import Call
 
-__all__ = ["GetDataFromCallLog"]
+__all__ = ["Call"]
