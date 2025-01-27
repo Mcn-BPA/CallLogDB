@@ -1,16 +1,12 @@
 import configparser
-from logger import setup_logger
-from error_class import Error
+from Error import Error
 import psycopg2
 
 class AddError:
     
-    def __init__(self, file_name:str, error_code:str, error_text:str, error_date:str):
+    def __init__(self, file_name:str, error_code:str, error_text:str, error_date:str, config_path = 'settings/setting.ini'):
         self.__error = Error(file_name, error_code, error_text, error_date)
-        # * инициализация логера
-        self.__log = setup_logger(log_file_name='errors.log')
-        self.__CONFIG_PATH = 'settings/setting.ini'
-       
+        self.__config_path = config_path
         
     def __set_connection(self):
         """Создание подключения
@@ -21,7 +17,7 @@ class AddError:
         try:
             # Загрузка настроек подключения
             __config = configparser.ConfigParser()
-            __config.read(self.__CONFIG_PATH)
+            __config.read(self.__config_path)
 
             db_params = {
             'dbname': __config['DATA_DB_ERROR']['database'],
@@ -51,17 +47,19 @@ class AddError:
             error_date = self.__error.get_error_date()
             server_name = self.__error.get_server_name()
             
+            __config = configparser.ConfigParser()
+            __config.read(self.__config_path)
+            
             conn = self.__set_connection()
             cursor = conn.cursor()
-        
+            
             # Начало транзакции
             cursor.execute("BEGIN;")
             
             cursor.execute(f'''
-                INSERT INTO ??? (client_ls, client_name, script_path, error_code, error_text, error_date, server_name)
+                INSERT INTO {__config['DATA_DB_ERROR']['table_name']} (client_ls, client_name, script_path, error_code, error_text, error_date, server_name)
                 VALUES ({client_ls}, {client_name}, {script_path}, {error_code}, {error_text}, {error_date}, {server_name});
                 ''')
-                #! Дописать таблицу, в которую записывать
                 
             # Фиксация транзакции
             cursor.execute("COMMIT;")
