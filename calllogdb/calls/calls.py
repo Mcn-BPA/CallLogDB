@@ -13,8 +13,7 @@ class Calls:
         id_ = data["id"]
         did = data.get("did", "")
         dst_num = data.get("dst_num", "")
-        events = [Events.from_dict(event_data)
-                  for event_data in data.get("events", [])]
+        events = [Events.from_dict(event_data) for event_data in data.get("events", [])]
         return Call(id_=id_, did=did, dst_num=dst_num, events=events, **data)
 
     def add_call(self, json_data: str):

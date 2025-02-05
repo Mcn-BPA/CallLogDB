@@ -1,7 +1,7 @@
-import os
+# import os
 
 
-class Config:
-    pass
+# class Config:
+#     pass
 
-config = Config() 
+# config = Config()
