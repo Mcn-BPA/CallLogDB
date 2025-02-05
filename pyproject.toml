@@ -1,0 +1,21 @@
+[tool.black]
+line-length = 120
+target-version = ['py312', 'py313']
+
+[tool.flake8]
+exclude = [".git", "__pycache__", "env", "venv"]
+max-line-length = 120
+max-complexity = 8
+ignore = ["W292"]
+
+[tool.isort]
+profile = "black"
+multi_line_output = 3
+line_length = 120
+
+[tool.mypy]
+strict = true
+
+[tool.pylint]
+max-line-length = 120
+disable = ["C0114", "C0115", "C0116"]
