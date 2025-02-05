@@ -1,11 +1,10 @@
 import json
 from calllogdb.types import Call, Events
-from typing import List
 
 
 class Calls:
     def __init__(self):
-        self.calls: List[Call] = []  # Список для хранения звонков
+        self.calls: list[Call] = []  # Список для хранения звонков
 
     @staticmethod
     def parse_json(json_data: str) -> Call:
