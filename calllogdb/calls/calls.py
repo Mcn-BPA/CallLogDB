@@ -1,4 +1,5 @@
 import json
+
 from calllogdb.types import Call, Events
 
 

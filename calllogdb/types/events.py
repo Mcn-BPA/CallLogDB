@@ -1,4 +1,4 @@
-from typing import Type, TypeVar, Any, Callable
+from typing import Any, Callable, Type, TypeVar
 
 T = TypeVar("T", bound="Events")  # Тип-потомок Events
 
