@@ -24,6 +24,16 @@ class TimeConditionEvent(Events):
         return TimeConditionEvent(**data)
 
 
+@Events.register("http")
+class HTTPEvent(Events):
+    def __init__(self, **kwargs: Any) -> None:
+        super().__init__("http", **kwargs)
+
+    @staticmethod
+    def from_dict(data: dict[str, Any]) -> "HTTPEvent":
+        return HTTPEvent(**data)
+
+
 @Events.register("api")
 class APIEvent(Events):
     def __init__(self, api_vars: Optional[dict[str, Any]] = None, **kwargs: Any) -> None:
