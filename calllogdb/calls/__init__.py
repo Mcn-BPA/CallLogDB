@@ -1,6 +1,7 @@
-""" 
+"""
 Файл для создания модуля программы
 """
-from .AddError import AddError
 
-__all__ = ["AddError"]
+from .calls import Calls
+
+__all__ = ["Calls"]
