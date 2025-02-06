@@ -1,0 +1,26 @@
+repos:
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.9.4  # укажите актуальную версию Ruff
+    hooks:
+      - id: ruff
+        args: ["--fix"]
+      - id: ruff-format
+
+  - repo: https://github.com/psf/black
+    rev: 25.1.0  # укажите актуальную версию Black
+    hooks:
+      - id: black
+        language_version: python3.12
+
+  - repo: https://github.com/PyCQA/isort
+    rev: 6.0.0  # актуальная версия isort
+    hooks:
+      - id: isort
+        args: ["--profile", "black"]
+
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v1.15.0  # актуальная версия mypy
+    hooks:
+      - id: mypy
+        args: ["--strict", "--ignore-missing-imports"]
+        additional_dependencies: ["tokenize-rt==3.2.0"]

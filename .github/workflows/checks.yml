@@ -1,4 +1,4 @@
-name: Code checks
+name: Code Checks
 
 on:
   push:
@@ -11,34 +11,21 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: [3.12.8]
+        python-version: [3.12]
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-      - name: Install Python ${{ matrix.python-version }}
+      - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
 
       - name: Install dependencies
         run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
-          pip install black isort pylint
+          pip install --upgrade pip
+          pip install pre-commit
 
-      - name: Run black
-        run: black --check .
-
-      - name: Run isort
-        run: isort . --check-only
-
-      - name: Run flake8
-        run: flake8 .
-
-      - name: Run mypy
-        run: mypy .
-
-      - name: Run pylint
-        run: pylint $(git ls-files '*.py')
+      - name: Run pre-commit checks
+        run: pre-commit run --all-files

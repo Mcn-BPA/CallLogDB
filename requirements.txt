@@ -1,12 +1,8 @@
-flake8
-flake8-bugbear
-flake8-builtins  # Можно убрать, если не переопределяешь встроенные функции
-flake8-variables-names  # Можно оставить, если нужна строгая проверка имен
-pep8-naming
+pre-commit
 black
 isort
 mypy
-pylint
+ruff
 
 loguru
 
