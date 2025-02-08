@@ -17,13 +17,6 @@ max-complexity = 8
 quote-style = "double"
 
 
-[tool.mypy]
-python_version = "3.12"
-ignore_missing_imports = true
-strict = true
-warn_unused_configs = true
-
-
 [tool.black]
 line-length = 120
 target-version = ['py312']
