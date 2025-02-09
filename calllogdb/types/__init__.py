@@ -3,6 +3,6 @@
 """
 
 from .call import Call
-from .events import Events
+from .event_base import EventBase
 
-__all__ = ["Call", "Events"]
+__all__ = ["Call", "EventBase"]
