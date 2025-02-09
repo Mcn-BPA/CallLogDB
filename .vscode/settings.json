@@ -1,5 +1,17 @@
 {
-  "cSpell.words": ["парся", "extnum", "recog", "timecondition"],
+  "cSpell.words": [
+    "парся",
+    "answerdate",
+    "calldate",
+    "calltype",
+    "etype",
+    "extnum",
+    "recog",
+    "subcls",
+    "timecondition",
+    "transfered",
+    "vpbx"
+  ],
   "commit-message-editor.staticTemplate": [
     "feat: Short description",
     "",
