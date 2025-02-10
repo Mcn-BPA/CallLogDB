@@ -1,6 +1,26 @@
+# pre-commit run --all-files
+[tool.ruff]
+exclude = [".git", "__pycache__", "build", "dist", "venv", "env", "migrations"]
+target-version = "py312"
+line-length = 120
+preview = true
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "B", "N", "I", "C"]
+ignore = ["E203"]
+per-file-ignores = { "__init__.py" = ["F401"] }
+
+[tool.ruff.lint.mccabe]
+max-complexity = 8
+
+[tool.ruff.format]
+quote-style = "double"
+
+
 [tool.black]
 line-length = 120
 target-version = ['py312']
+
 
 [tool.isort]
 profile = "black"

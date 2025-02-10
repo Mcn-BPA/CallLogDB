@@ -1,110 +1,122 @@
 import json
-from typing import Any, Optional, cast
+from dataclasses import dataclass, field
+from typing import Any
 
-from .events import Events
-
-
-@Events.register("blacklist")
-class BlacklistEvent(Events):
-    def __init__(self, **kwargs: Any) -> None:
-        super().__init__("blacklist", **kwargs)
-
-    @staticmethod
-    def from_dict(data: dict[str, Any]) -> "BlacklistEvent":
-        return BlacklistEvent(**data)
+from .event_base import EventBase
 
 
-@Events.register("timecondition")
-class TimeConditionEvent(Events):
-    def __init__(self, **kwargs: Any) -> None:
-        super().__init__("timecondition", **kwargs)
+# Пример реализации кастомных данных
+@EventBase.register("custom")
+@dataclass
+class CustomEvent(EventBase):
+    custom_field: str = ""
+    custom_value: int = 0
 
-    @staticmethod
-    def from_dict(data: dict[str, Any]) -> "TimeConditionEvent":
-        return TimeConditionEvent(**data)
+    @classmethod
+    def extract_fields(cls, data: dict[str, Any]) -> dict[str, Any]:
+        init_params = super().extract_common_fields(data)
+        init_params.update({"custom_field": data.get("custom_field", ""), "custom_value": data.get("custom_value", 0)})
+        return init_params
+
+    @classmethod
+    def from_dict(cls, data: dict[str, Any]) -> "CustomEvent":
+        init_params = cls.extract_fields(data)
+        return cls(**init_params)
 
 
-@Events.register("api")
-class APIEvent(Events):
-    def __init__(self, api_vars: Optional[dict[str, Any]] = None, **kwargs: Any) -> None:
-        super().__init__("api", **kwargs)
-        self.api_vars = api_vars or {}
+@EventBase.register("timecondition")
+@dataclass
+class TimeConditionEvent(EventBase):
+    @classmethod
+    def from_dict(cls, data: dict[str, Any]) -> "TimeConditionEvent":
+        init_params = cls.extract_common_fields(data)
+        return cls(**init_params)
 
-    @staticmethod
-    def parse_api_vars(api_vars_str: str) -> dict[str, Any]:
-        """Безопасное преобразование api_vars из строки в словарь."""
-        try:
-            # Исправляем возможные ошибки в JSON (например, одинарные кавычки)
-            api_vars_str = api_vars_str.replace("'", '"')
-            return cast(dict[str, Any], json.loads(api_vars_str))
-        except json.JSONDecodeError:
-            return {"error": "Failed to parse api_vars"}
 
-    @staticmethod
-    def from_dict(data: dict[str, Any]) -> "APIEvent":
-        """Создает объект APIEvent, парся api_vars."""
+@EventBase.register("http")
+@dataclass
+class HTTPEvent(EventBase):
+    @classmethod
+    def from_dict(cls, data: dict[str, Any]) -> "HTTPEvent":
+        init_params = cls.extract_common_fields(data)
+        return cls(**init_params)
+
+
+@EventBase.register("api")
+@dataclass
+class APIEvent(EventBase):
+    api_vars: dict[str, Any] = field(default_factory=dict)
+
+    @classmethod
+    def extract_fields(cls, data: dict[str, Any]) -> dict[str, Any]:
+        init_params = super().extract_common_fields(data)
         raw_api_vars = data.get("event_additional_info", {}).get("api_vars", "{}")
-        parsed_api_vars = APIEvent.parse_api_vars(raw_api_vars)
-        return APIEvent(api_vars=parsed_api_vars, **data)
+        try:
+            # Пробуем привести строку к корректному JSON (заменяем одинарные кавычки на двойные)
+            parsed_api_vars = json.loads(raw_api_vars.replace("'", '"'))
+        except json.JSONDecodeError:
+            parsed_api_vars = {"error": "Failed to parse api_vars"}
+        init_params.update({"api_vars": parsed_api_vars})
+        return init_params
+
+    @classmethod
+    def from_dict(cls, data: dict[str, Any]) -> "APIEvent":
+        init_params = cls.extract_fields(data)
+        return cls(**init_params)
 
 
-@Events.register("check")
-class CheckEvent(Events):
-    def __init__(self, **kwargs: Any) -> None:
-        super().__init__("check", **kwargs)
-
-    @staticmethod
-    def from_dict(data: dict[str, Any]) -> "CheckEvent":
-        return CheckEvent(**data)
-
-
-@Events.register("speech-recog")
-class SpeechRecogEvent(Events):
-    def __init__(self, **kwargs: Any) -> None:
-        super().__init__("speech-recog", **kwargs)
-
-    @staticmethod
-    def from_dict(data: dict[str, Any]) -> "SpeechRecogEvent":
-        return SpeechRecogEvent(**data)
+@EventBase.register("check")
+@dataclass
+class CheckEvent(EventBase):
+    @classmethod
+    def from_dict(cls, data: dict[str, Any]) -> "CheckEvent":
+        init_params = cls.extract_common_fields(data)
+        return cls(**init_params)
 
 
-@Events.register("synthesis")
-class SynthesisEvent(Events):
-    def __init__(self, **kwargs: Any) -> None:
-        super().__init__("synthesis", **kwargs)
-
-    @staticmethod
-    def from_dict(data: dict[str, Any]) -> "SynthesisEvent":
-        return SynthesisEvent(**data)
-
-
-@Events.register("code")
-class CodeEvent(Events):
-    def __init__(self, **kwargs: Any) -> None:
-        super().__init__("code", **kwargs)
-
-    @staticmethod
-    def from_dict(data: dict[str, Any]) -> "CodeEvent":
-        return CodeEvent(**data)
+@EventBase.register("speech-recog")
+@dataclass
+class SpeechRecogEvent(EventBase):
+    @classmethod
+    def from_dict(cls, data: dict[str, Any]) -> "SpeechRecogEvent":
+        init_params = cls.extract_common_fields(data)
+        return cls(**init_params)
 
 
-@Events.register("extnum")
-class ExtNumEvent(Events):
-    def __init__(self, **kwargs: Any) -> None:
-        super().__init__("extnum", **kwargs)
+@EventBase.register("synthesis")
+@dataclass
+class SynthesisEvent(EventBase):
+    @classmethod
+    def from_dict(cls, data: dict[str, Any]) -> "SynthesisEvent":
+        init_params = cls.extract_common_fields(data)
+        return cls(**init_params)
 
-    @staticmethod
-    def from_dict(data: dict[str, Any]) -> "ExtNumEvent":
-        return ExtNumEvent(**data)
+
+@EventBase.register("code")
+@dataclass
+class CodeEvent(EventBase):
+    @classmethod
+    def from_dict(cls, data: dict[str, Any]) -> "CodeEvent":
+        init_params = cls.extract_common_fields(data)
+        return cls(**init_params)
 
 
-class UnknownEvent(Events):
-    """Обрабатывает события с неизвестным типом."""
+@EventBase.register("extnum")
+@dataclass
+class ExtNumEvent(EventBase):
+    @classmethod
+    def from_dict(cls, data: dict[str, Any]) -> "ExtNumEvent":
+        init_params = cls.extract_common_fields(data)
+        return cls(**init_params)
 
-    def __init__(self, event_type: str = "unknown", **kwargs: Any):
-        super().__init__(event_type)
-        self.data = kwargs
 
-    @staticmethod
-    def from_dict(data: dict[str, Any]) -> "UnknownEvent":
-        return UnknownEvent(event_type=data.get("event_type", "unknown"), **data)
+@dataclass
+class UnknownEvent(EventBase):
+    data: dict[str, Any] = field(default_factory=dict)
+
+    @classmethod
+    def from_dict(cls, data: dict[str, Any]) -> "UnknownEvent":
+        init_params = cls.extract_common_fields(data)
+        # Сохраняем оставшиеся ключи, которых нет в общих полях
+        extra = {k: v for k, v in data.items() if k not in init_params}
+        return cls(**init_params, data=extra)
