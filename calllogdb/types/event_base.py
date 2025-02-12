@@ -16,9 +16,25 @@ class EventBase:
 
     Args:
         event_type (str): Тип события
+        event_status (str): Статус
+        event_dst_num (str): Сокращённый номер
+        event_dst_type (str): Тип события
+        event_start_time (str): Дата и время начала события
+        event_end_time (str): Дата и время окончания события
+        event_talk_time (int): Время разговора в событии
+        event_wait_time (int): Время ожидания в событии
+        event_total_time (int): Общее время события
     """
 
     event_type: str
+    event_status: str
+    event_dst_num: str
+    event_dst_type: str
+    event_start_time: str
+    event_end_time: str
+    event_talk_time: int
+    event_wait_time: int
+    event_total_time: int
 
     # Реестр для регистрации подклассов по event_type
     _registry: ClassVar[dict[str, type["EventBase"]]] = {}
@@ -37,8 +53,8 @@ class EventBase:
             Callable ([[Type[T]], Type[T]]): Функция-декоратор для регистрации класса.
 
         Example:
-            >>> @EventBase.register("timecondition")
-            ... @dataclass
+            >>> @dataclass
+            ... @EventBase.register("timecondition")
             ... class TimeConditionEvent(EventBase):
             ...     @classmethod
             ...     def from_dict(cls, data: dict[str, Any]) -> "TimeConditionEvent":
@@ -57,6 +73,14 @@ class EventBase:
         """Извлекает общие для всех событий поля."""
         return {
             "event_type": data.get("event_type", ""),
+            "event_status": data.get("event_status", ""),
+            "event_dst_num": data.get("event_dst_num", ""),
+            "event_dst_type": data.get("event_dst_type", ""),
+            "event_start_time": data.get("event_start_time", ""),
+            "event_end_time": data.get("event_end_time", ""),
+            "event_talk_time": data.get("event_talk_time", 0),
+            "event_wait_time": data.get("event_wait_time", 0),
+            "event_total_time": data.get("event_wait_time", 0),
         }
 
     @classmethod
@@ -87,6 +111,8 @@ class EventBase:
             "2025-02-09T10:00:00"
         """
         etype = data.get("event_type", "")
+        if etype is None:
+            etype = "None"
         if etype not in cls._registry:
             raise ValueError(f"Неизвестный тип события: {etype}")
         return cls._registry[etype].from_dict(data)

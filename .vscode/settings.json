@@ -7,6 +7,7 @@
     "etype",
     "extnum",
     "recog",
+    "speechkit",
     "subcls",
     "timecondition",
     "transfered",
