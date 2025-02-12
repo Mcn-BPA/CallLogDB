@@ -1,5 +1,9 @@
+import re
 from dataclasses import dataclass
+from datetime import datetime
 from typing import Any, Callable, ClassVar, TypeVar
+
+from calllogdb.utils import parse_datetime
 
 T = TypeVar("T", bound="EventBase")
 
@@ -16,12 +20,42 @@ class EventBase:
 
     Args:
         event_type (str): Тип события
+        event_status (str): Статус
+        event_dst_num (str): Сокращённый номер
+        event_dst_type (str): Тип события
+        event_start_time (str): Дата и время начала события
+        event_end_time (str): Дата и время окончания события
+        event_talk_time (int): Время разговора в событии
+        event_wait_time (int): Время ожидания в событии
+        event_total_time (int): Общее время события
     """
 
     event_type: str
+    event_status: str
+    event_dst_num: str
+    event_dst_type: str
+    event_transfered_from: str
+    event_start_time: datetime | None
+    event_end_time: datetime | None
+    event_talk_time: int
+    event_wait_time: int
+    event_total_time: int
 
     # Реестр для регистрации подклассов по event_type
     _registry: ClassVar[dict[str, type["EventBase"]]] = {}
+
+    @staticmethod
+    def string_from_dict(string: str | None) -> dict[str, str]:
+        if string is None:
+            return {}
+        cleaned_string = re.sub(r"[{}()\[\]']", "", string)
+        pairs = [pair.strip() for pair in cleaned_string.split(",") if ":" in pair]
+
+        result_dict: dict[str, str] = {}
+        for pair in pairs:
+            key, value = map(str.strip, pair.split(":", maxsplit=1))
+            result_dict[key] = value
+        return result_dict
 
     @classmethod
     def register(cls, event_type: str) -> Callable[[type[T]], type[T]]:
@@ -37,8 +71,8 @@ class EventBase:
             Callable ([[Type[T]], Type[T]]): Функция-декоратор для регистрации класса.
 
         Example:
-            >>> @EventBase.register("timecondition")
-            ... @dataclass
+            >>> @dataclass
+            ... @EventBase.register("timecondition")
             ... class TimeConditionEvent(EventBase):
             ...     @classmethod
             ...     def from_dict(cls, data: dict[str, Any]) -> "TimeConditionEvent":
@@ -57,6 +91,15 @@ class EventBase:
         """Извлекает общие для всех событий поля."""
         return {
             "event_type": data.get("event_type", ""),
+            "event_status": data.get("event_status", ""),
+            "event_dst_num": data.get("event_dst_num", ""),
+            "event_dst_type": data.get("event_dst_type", ""),
+            "event_transfered_from": data.get("event_transfered_from", ""),
+            "event_start_time": parse_datetime(data.get("event_start_time", "")),
+            "event_end_time": parse_datetime(data.get("event_end_time", "")),
+            "event_talk_time": data.get("event_talk_time", 0),
+            "event_wait_time": data.get("event_wait_time", 0),
+            "event_total_time": data.get("event_total_time", 0),
         }
 
     @classmethod
@@ -87,6 +130,8 @@ class EventBase:
             "2025-02-09T10:00:00"
         """
         etype = data.get("event_type", "")
+        if etype is None:
+            etype = "None"
         if etype not in cls._registry:
             raise ValueError(f"Неизвестный тип события: {etype}")
         return cls._registry[etype].from_dict(data)

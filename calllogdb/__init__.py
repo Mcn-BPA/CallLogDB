@@ -2,7 +2,6 @@
 Файл для создания модуля программы
 """
 
-from .calls import Calls
-from .types import Call, EventBase
+from .types import Call, Calls, EventBase
 
-__all__ = ["Calls", "Call", "EventBase"]
+__all__ = ["Call", "Calls", "EventBase"]
