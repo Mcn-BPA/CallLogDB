@@ -1,29 +1,145 @@
 from dataclasses import dataclass, field
+from datetime import datetime
 from typing import Any
+
+from calllogdb.utils import parse_datetime
 
 from .event_base import EventBase
 
 
 # Пример реализации кастомных данных
 @dataclass
-@EventBase.register("custom")
-class CustomEvent(EventBase):
-    custom_field: str = ""
-    custom_value: int = 0
+@EventBase.register("announce")
+class AnnounceEvent(EventBase):
+    """Приветствие"""
+
+    @classmethod
+    def from_dict(cls, data: dict[str, Any]) -> "AnnounceEvent":
+        init_params = cls.extract_common_fields(data)
+        return cls(**init_params)
+
+
+@dataclass
+@EventBase.register("hangup")
+class HangupEvent(EventBase):
+    """Повесить трубку"""
+
+    @classmethod
+    def from_dict(cls, data: dict[str, Any]) -> "HangupEvent":
+        init_params = cls.extract_common_fields(data)
+        return cls(**init_params)
+
+
+@dataclass
+@EventBase.register("ivr")
+class IvrEvent(EventBase):
+    """Сценарий звонков"""
+
+    @classmethod
+    def from_dict(cls, data: dict[str, Any]) -> "IvrEvent":
+        init_params = cls.extract_common_fields(data)
+        return cls(**init_params)
+
+
+@dataclass
+@EventBase.register("gpt")
+class GptEvent(EventBase):
+    """ИИ"""
+
+    api_vars: dict[str, str]
+
+    @classmethod
+    def extract_common_fields(cls, data: dict[str, Any]) -> dict[str, Any]:
+        init_params = super().extract_common_fields(data)
+        raw_api_vars = data.get("event_additional_info", {}).get("api_vars")
+        init_params.update({"api_vars": cls.string_from_dict(raw_api_vars)})
+        return init_params
+
+    @classmethod
+    def from_dict(cls, data: dict[str, Any]) -> "GptEvent":
+        init_params = cls.extract_common_fields(data)
+        return cls(**init_params)
+
+
+@dataclass
+@EventBase.register("robocall_task")
+class RobocallTaskEvent(EventBase):
+    """Авто-звонки"""
+
+    api_vars: dict[str, str]
+
+    @classmethod
+    def extract_common_fields(cls, data: dict[str, Any]) -> dict[str, Any]:
+        init_params = super().extract_common_fields(data)
+        raw_api_vars = data.get("event_additional_info", {}).get("api_vars")
+        init_params.update({"api_vars": cls.string_from_dict(raw_api_vars)})
+        return init_params
+
+    @classmethod
+    def from_dict(cls, data: dict[str, Any]) -> "RobocallTaskEvent":
+        init_params = cls.extract_common_fields(data)
+        return cls(**init_params)
+
+
+@dataclass
+@EventBase.register("menu")
+class MenuEvent(EventBase):
+    """Голосовое меню"""
+
+    exten: str
+
+    @classmethod
+    def extract_common_fields(cls, data: dict[str, Any]) -> dict[str, Any]:
+        init_params = super().extract_common_fields(data)
+        init_params.update({"exten": data.get("event_additional_info", {}).get("exten", "")})
+        return init_params
+
+    @classmethod
+    def from_dict(cls, data: dict[str, Any]) -> "MenuEvent":
+        init_params = cls.extract_common_fields(data)
+        return cls(**init_params)
+
+
+@dataclass
+@EventBase.register("queue")
+class QueueEvent(EventBase):
+    """Очередь"""
+
+    name: str
+    number: str
+    event_answer_time: datetime
 
     @classmethod
     def extract_common_fields(cls, data: dict[str, Any]) -> dict[str, Any]:
         init_params = super().extract_common_fields(data)
         init_params.update(
             {
-                "custom_field": data.get("custom_field", ""),
-                "custom_value": data.get("custom_value", 0),
+                "name": data.get("event_additional_info", {}).get("name", ""),
+                "number": data.get("event_additional_info", {}).get("number", ""),
+                "event_answer_time": parse_datetime(data.get("event_answer_time", "")),
             }
         )
         return init_params
 
     @classmethod
-    def from_dict(cls, data: dict[str, Any]) -> "CustomEvent":
+    def from_dict(cls, data: dict[str, Any]) -> "QueueEvent":
+        init_params = cls.extract_common_fields(data)
+        return cls(**init_params)
+
+
+@dataclass
+@EventBase.register("queue_member")
+class QueueMemberEvent(EventBase):
+    event_dst_name: str
+
+    @classmethod
+    def extract_common_fields(cls, data: dict[str, Any]) -> dict[str, Any]:
+        init_params = super().extract_common_fields(data)
+        init_params.update({"name": data.get("event_dst_name", "")})
+        return init_params
+
+    @classmethod
+    def from_dict(cls, data: dict[str, Any]) -> "QueueMemberEvent":
         init_params = cls.extract_common_fields(data)
         return cls(**init_params)
 
@@ -31,6 +147,8 @@ class CustomEvent(EventBase):
 @dataclass
 @EventBase.register("timecondition")
 class TimeConditionEvent(EventBase):
+    """Расписание"""
+
     exten: str
 
     @classmethod
@@ -82,8 +200,46 @@ class APIEvent(EventBase):
 
 
 @dataclass
+@EventBase.register("sms")
+class SmsEvent(EventBase):
+    """Отправка SMS"""
+
+    message: str
+    target_number: str
+
+    @classmethod
+    def extract_common_fields(cls, data: dict[str, Any]) -> dict[str, Any]:
+        init_params = super().extract_common_fields(data)
+        init_params.update(
+            {
+                "message": data.get("event_additional_info", {}).get("message", ""),
+                "target_number": data.get("event_additional_info", {}).get("target_number", ""),
+            }
+        )
+        return init_params
+
+    @classmethod
+    def from_dict(cls, data: dict[str, Any]) -> "SmsEvent":
+        init_params = cls.extract_common_fields(data)
+        return cls(**init_params)
+
+
+@dataclass
+@EventBase.register("switch")
+class SwitchEvent(EventBase):
+    """Проверка условия"""
+
+    @classmethod
+    def from_dict(cls, data: dict[str, Any]) -> "SwitchEvent":
+        init_params = cls.extract_common_fields(data)
+        return cls(**init_params)
+
+
+@dataclass
 @EventBase.register("check")
 class CheckEvent(EventBase):
+    """Проверка условия"""
+
     name: str
     result: str
 
@@ -107,13 +263,7 @@ class CheckEvent(EventBase):
 @dataclass
 @EventBase.register("speech-recog")
 class SpeechRecogEvent(EventBase):
-    """
-    Дата-класс speech-recog хранит элементы вопрос-ответ
-
-    Args:
-        question (str): Вопрос
-        answer (str | None): Ответ
-    """
+    """Вопрос-ответ"""
 
     question: str
     answer: str | None
@@ -136,6 +286,8 @@ class SpeechRecogEvent(EventBase):
 @dataclass
 @EventBase.register("synthesis")
 class SynthesisEvent(EventBase):
+    """Синтез речи"""
+
     message: str
 
     @classmethod
@@ -189,6 +341,8 @@ class ExtNumEvent(EventBase):
 @dataclass
 @EventBase.register("blacklist")
 class BlackListEvent(EventBase):
+    """Черный список"""
+
     exten: str
 
     @classmethod

@@ -99,7 +99,7 @@ class EventBase:
             "event_end_time": parse_datetime(data.get("event_end_time", "")),
             "event_talk_time": data.get("event_talk_time", 0),
             "event_wait_time": data.get("event_wait_time", 0),
-            "event_total_time": data.get("event_wait_time", 0),
+            "event_total_time": data.get("event_total_time", 0),
         }
 
     @classmethod
