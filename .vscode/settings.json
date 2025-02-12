@@ -5,6 +5,7 @@
     "calldate",
     "calltype",
     "etype",
+    "exten",
     "extnum",
     "recog",
     "speechkit",

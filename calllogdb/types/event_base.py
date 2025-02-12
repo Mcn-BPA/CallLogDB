@@ -1,5 +1,9 @@
+import re
 from dataclasses import dataclass
+from datetime import datetime
 from typing import Any, Callable, ClassVar, TypeVar
+
+from calllogdb.utils import parse_datetime
 
 T = TypeVar("T", bound="EventBase")
 
@@ -30,14 +34,28 @@ class EventBase:
     event_status: str
     event_dst_num: str
     event_dst_type: str
-    event_start_time: str
-    event_end_time: str
+    event_transfered_from: str
+    event_start_time: datetime | None
+    event_end_time: datetime | None
     event_talk_time: int
     event_wait_time: int
     event_total_time: int
 
     # Реестр для регистрации подклассов по event_type
     _registry: ClassVar[dict[str, type["EventBase"]]] = {}
+
+    @staticmethod
+    def string_from_dict(string: str | None) -> dict[str, str]:
+        if string is None:
+            return {}
+        cleaned_string = re.sub(r"[{}()\[\]']", "", string)
+        pairs = [pair.strip() for pair in cleaned_string.split(",") if ":" in pair]
+
+        result_dict: dict[str, str] = {}
+        for pair in pairs:
+            key, value = map(str.strip, pair.split(":", maxsplit=1))
+            result_dict[key] = value
+        return result_dict
 
     @classmethod
     def register(cls, event_type: str) -> Callable[[type[T]], type[T]]:
@@ -76,8 +94,9 @@ class EventBase:
             "event_status": data.get("event_status", ""),
             "event_dst_num": data.get("event_dst_num", ""),
             "event_dst_type": data.get("event_dst_type", ""),
-            "event_start_time": data.get("event_start_time", ""),
-            "event_end_time": data.get("event_end_time", ""),
+            "event_transfered_from": data.get("event_transfered_from", ""),
+            "event_start_time": parse_datetime(data.get("event_start_time", "")),
+            "event_end_time": parse_datetime(data.get("event_end_time", "")),
             "event_talk_time": data.get("event_talk_time", 0),
             "event_wait_time": data.get("event_wait_time", 0),
             "event_total_time": data.get("event_wait_time", 0),
