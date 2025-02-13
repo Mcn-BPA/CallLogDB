@@ -9,7 +9,7 @@
             "name": "Отладчик Python: call",
             "type": "debugpy",
             "request": "launch",
-            "module": "calllogdb.types.call"
+            "module": "calllogdb.api.api_client"
         }
     ]
 }
