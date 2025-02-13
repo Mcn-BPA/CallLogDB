@@ -2,6 +2,6 @@
 Файл для создания модуля программы
 """
 
-from .config import Config, config
+from .api_client import APIClient
 
-__all__ = ["Config", "config"]
+__all__ = ["APIClient"]

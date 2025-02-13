@@ -1,7 +1,7 @@
 # pre-commit run --all-files
 repos:
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.9.4  # укажите актуальную версию Ruff
+    rev: v0.9.6  # укажите актуальную версию Ruff
     hooks:
       - id: ruff
         args: ["--fix"]
@@ -24,4 +24,6 @@ repos:
     hooks:
       - id: mypy
         args: ["--strict", "--ignore-missing-imports"]
-        additional_dependencies: ["tokenize-rt==3.2.0"]
+        additional_dependencies:
+          - tokenize-rt==3.2.0
+          - types-requests
