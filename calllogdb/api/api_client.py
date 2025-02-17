@@ -24,7 +24,7 @@ class APIClient:
 
         # Настройка повторных попыток при неудачных запросах
         retries = Retry(
-            total=1,
+            total=5,
             backoff_factor=1.0,
             status_forcelist=[500, 502, 503, 504],
             allowed_methods=["GET", "OPTIONS", "HEAD"],
@@ -33,7 +33,7 @@ class APIClient:
         self.session.mount("http://", adapter)
         self.session.mount("https://", adapter)
 
-    def get(self, params: Optional[dict[str, Any]] = None) -> dict[str, Any]:
+    def get(self, *, params: Optional[dict[str, Any]] = None) -> dict[str, Any]:
         """
         Отправляет GET-запрос с указанными параметрами и возвращает результат в формате JSON.
         """
@@ -61,15 +61,15 @@ class APIClient:
 
 
 # Пример использования
-if __name__ == "__main__":
-    params = {
-        "date_from": "2025-02-12 10:00:00",
-        "date_to": "2025-02-12 12:00:00",
-        "request_detailed": "1",
-        "limit": 1000,
-        "offset": 0,
-    }
-    # GET-запрос
-    with APIClient() as api:
-        response = api.get(params=params)
-        pass
+# if __name__ == "__main__":
+#     params = {
+#         "date_from": "2025-02-12 10:00:00",
+#         "date_to": "2025-02-12 12:00:00",
+#         "request_detailed": "1",
+#         "limit": 1000,
+#         "offset": 0,
+#     }
+#     # GET-запрос
+#     with APIClient() as api:
+#         response = api.get(params=params)
+#         pass
