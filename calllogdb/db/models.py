@@ -1,4 +1,4 @@
-from sqlalchemy import JSON, Column, DateTime, ForeignKey, Integer, Text
+from sqlalchemy import JSON, Boolean, Column, DateTime, ForeignKey, Integer, Text
 from sqlalchemy.orm import DeclarativeBase, relationship
 
 
@@ -28,13 +28,16 @@ class Call(Base):
     src_type = Column(Text)
     talk_time = Column(Integer)
     total_time = Column(Integer)
-    transfered_linked_to = Column(Text)
+    transfered_linked_to = Column(Boolean)
     vpbx_id = Column(Text)
-    wait_time = Column(Text)
+    wait_time = Column(Integer)
 
+    # Связь "один-к-одному"
+    date = relationship(
+        "Date", back_populates="call", uselist=False, cascade="all, delete-orphan", passive_deletes=True
+    )
     # Связь "один-ко-многим"
-    date = relationship("Date", back_populates="call")
-    event = relationship("Event", back_populates="call")
+    event = relationship("Event", back_populates="call", cascade="all, delete", passive_deletes=True)
 
 
 # Модель даты и времени
@@ -42,7 +45,7 @@ class Date(Base):
     __tablename__ = "date"
 
     id = Column(Integer, primary_key=True, unique=True)
-    call_id = Column(Text, ForeignKey("call.call_id"), unique=True)
+    call_id = Column(Text, ForeignKey("call.call_id", ondelete="CASCADE"), unique=True)
     year = Column(Integer)
     month = Column(Integer)
     day = Column(Integer)
@@ -59,16 +62,16 @@ class Event(Base):
     __tablename__ = "event"
 
     id = Column(Integer, primary_key=True, unique=True)
-    call_id = Column(Text, ForeignKey("call.call_id"), unique=True)
+    call_id = Column(Text, ForeignKey("call.call_id", ondelete="CASCADE"), unique=True)
     event_type = Column(Text)
     event_status = Column(Text)
     event_dst_num = Column(Text)
     event_dst_type = Column(Text)
     event_start_time = Column(DateTime)
     event_end_time = Column(DateTime)
-    event_talk_time = Column(Text)
-    event_wait_time = Column(Text)
-    event_total_time = Column(Text)
+    event_talk_time = Column(Integer)
+    event_wait_time = Column(Integer)
+    event_total_time = Column(Integer)
     exten = Column(Text)
     name = Column(Text)
     result = Column(Text)
@@ -77,7 +80,7 @@ class Event(Base):
     message = Column(Text)
 
     # Связь "один-ко-многим"
-    api_vars = relationship("ApiVars", back_populates="event")
+    api_vars = relationship("ApiVars", back_populates="event", cascade="all, delete", passive_deletes=True)
 
     # Обратная связь
     call = relationship("Call", back_populates="event")
@@ -88,7 +91,7 @@ class ApiVars(Base):
     __tablename__ = "api_vars"
 
     id = Column(Integer, primary_key=True, unique=True)
-    event_id = Column(Integer, ForeignKey("event.id"), unique=True)
+    event_id = Column(Integer, ForeignKey("event.id", ondelete="CASCADE"), unique=True)
     account_id = Column(Text)
     num_a = Column(Text)
     num_b = Column(Text)
