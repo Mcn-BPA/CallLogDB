@@ -2,15 +2,14 @@ from sqlalchemy import JSON, Boolean, Column, DateTime, ForeignKey, Integer, Tex
 from sqlalchemy.orm import DeclarativeBase, relationship
 
 
-class Base(DeclarativeBase):
-    pass
+class Base(DeclarativeBase): ...
 
 
 # Модель звонков
 class Call(Base):
     __tablename__ = "call"
 
-    call_id = Column(Text, primary_key=True, unique=True)
+    call_id = Column(Text, primary_key=True)
     answer_date = Column(DateTime)
     call_status = Column(Text)
     call_date = Column(DateTime)
@@ -32,12 +31,22 @@ class Call(Base):
     vpbx_id = Column(Text)
     wait_time = Column(Integer)
 
-    # Связь "один-к-одному"
+    # Связь "один-к-одному" с моделью Date
     date = relationship(
-        "Date", back_populates="call", uselist=False, cascade="all, delete-orphan", passive_deletes=True
+        "Date",
+        back_populates="call",
+        uselist=False,
+        cascade="all, delete-orphan",
+        passive_deletes=True,
     )
-    # Связь "один-ко-многим"
-    event = relationship("Event", back_populates="call", cascade="all, delete", passive_deletes=True)
+
+    # Связь "один-ко-многим" с моделью Event
+    events = relationship(
+        "Event",
+        back_populates="call",
+        cascade="all, delete",
+        passive_deletes=True,
+    )
 
 
 # Модель даты и времени
