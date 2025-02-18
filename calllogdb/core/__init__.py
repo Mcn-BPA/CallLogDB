@@ -3,6 +3,5 @@
 """
 
 from .config import Config, config
-from .constants import Session
 
-__all__ = ["Config", "config", "Session"]
+__all__ = ["Config", "config"]
