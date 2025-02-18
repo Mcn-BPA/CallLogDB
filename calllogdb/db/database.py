@@ -14,13 +14,11 @@ Session = sessionmaker(engine)
 
 
 class Database:
-
     def create(self) -> None:
         Base.metadata.create_all(engine)
 
     def insert(self, call: CallData) -> None:
         with Session() as session:
-
             new_call = Call(**asdict(call))
             session.add(new_call)
             session.flush()
