@@ -81,7 +81,7 @@ class Event(Base):
     __tablename__ = "event"
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    call_id: Mapped[str] = mapped_column(Text, ForeignKey("call.call_id", ondelete="CASCADE"))
+    call_id: Mapped[str] = mapped_column(Text, ForeignKey("call.call_id", ondelete="CASCADE"), primary_key=True)
     event_type: Mapped[str | None] = mapped_column()
     event_status: Mapped[str | None] = mapped_column()
     event_dst_num: Mapped[str | None] = mapped_column()
@@ -121,7 +121,7 @@ class ApiVars(Base):
     __tablename__ = "api_vars"
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    event_id: Mapped[int] = mapped_column(ForeignKey("event.id", ondelete="CASCADE"))
+    event_id: Mapped[int] = mapped_column(ForeignKey("event.id", ondelete="CASCADE"), primary_key=True)
     account_id: Mapped[str | None] = mapped_column()
     num_a: Mapped[str | None] = mapped_column()
     num_b: Mapped[str | None] = mapped_column()
