@@ -54,7 +54,7 @@ class Date(Base):
     __tablename__ = "date"
 
     id = Column(Integer, primary_key=True, unique=True)
-    call_id = Column(Text, ForeignKey("call.call_id", ondelete="CASCADE"), unique=True)
+    call_id = Column(Text, ForeignKey("call.call_id", ondelete="CASCADE"))
     year = Column(Integer)
     month = Column(Integer)
     day = Column(Integer)
@@ -71,7 +71,7 @@ class Event(Base):
     __tablename__ = "event"
 
     id = Column(Integer, primary_key=True, unique=True)
-    call_id = Column(Text, ForeignKey("call.call_id", ondelete="CASCADE"), unique=True)
+    call_id = Column(Text, ForeignKey("call.call_id", ondelete="CASCADE"))
     event_type = Column(Text)
     event_status = Column(Text)
     event_dst_num = Column(Text)
