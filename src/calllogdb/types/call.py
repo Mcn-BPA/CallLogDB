@@ -1,4 +1,3 @@
-import json
 from dataclasses import dataclass, field, fields
 from datetime import datetime
 from typing import Any
@@ -75,12 +74,3 @@ class Call:
             events=[EventBase.from_dict(ed) for ed in events_data],
             **filtered_data,
         )
-
-
-# Пример для тестов работоспособности
-if __name__ == "__main__":
-    with open("test.json", "r", encoding="utf-8") as file:
-        call_data = json.load(file)
-
-    call = Call.from_dict(call_data)
-    pass
