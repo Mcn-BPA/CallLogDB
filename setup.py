@@ -7,7 +7,7 @@ setup(
     long_description=open("README.md", encoding="utf-8").read(),
     long_description_content_type="text/markdown",
     author="miomelliot, Alexeyalexeyalexm, deydysh",
-    author_email="s89652158910@gmail.com", # укажите тут свои почты связанные с GitHub
+    author_email="s89652158910@gmail.com",  # укажите тут свои почты связанные с GitHub
     url="https://github.com/Mcn-BPA/CallLogDB",
     packages=find_packages(where="src"),
     package_dir={"": "src"},
