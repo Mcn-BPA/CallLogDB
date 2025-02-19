@@ -15,27 +15,27 @@ class Call:
 
     """
 
-    id: str = ""
-    answerdate: datetime | None = None
-    calldate: datetime | None = None
-    endtime: datetime | None = None
-    calltype: str = ""
-    src_type: str = ""
-    call_status: str = ""
-    hangup_reason: str = ""
-    dst_type: str = ""
-    dst_num: str = ""
-    dst_name: str = ""
-    did: str = ""
-    did_num: str = ""
-    src_name: str = ""
-    src_num: str = ""
-    total_time: int = 0
-    wait_time: int = 0
-    talk_time: int = 0
-    events_count: int = 0
+    call_id: str = ""
+    answer_date: datetime | None = None
+    call_date: datetime | None = None
+    end_time: datetime | None = None
+    call_type: str | None = None
+    src_type: str | None = None
+    call_status: str | None = None
+    hangup_reason: str | None = None
+    dst_type: str | None = None
+    dst_num: str | None = None
+    dst_name: str | None = None
+    did: str | None = None
+    did_num: str | None = None
+    src_name: str | None = None
+    src_num: str | None = None
+    total_time: int | None = None
+    wait_time: int | None = None
+    talk_time: int | None = None
+    events_count: int | None = None
     transfered_linked_to: bool = False
-    vpbx_id: int = 0
+    vpbx_id: int | None = None
     events: list["EventBase"] = field(default_factory=list)
 
     @classmethod

@@ -2,17 +2,22 @@
   "cSpell.words": [
     "парся",
     "answerdate",
+    "apivars",
     "calldate",
     "calltype",
+    "dtmf",
     "etype",
     "exten",
     "extnum",
     "forcelist",
+    "ondelete",
     "recog",
+    "sessionmaker",
     "speechkit",
     "subcls",
     "timecondition",
     "transfered",
+    "uselist",
     "vpbx"
   ],
   "commit-message-editor.staticTemplate": [
