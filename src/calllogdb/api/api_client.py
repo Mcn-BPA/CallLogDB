@@ -58,18 +58,3 @@ class APIClient:
     ) -> bool | None:
         self.close()
         return None
-
-
-# Пример использования
-# if __name__ == "__main__":
-#     params = {
-#         "date_from": "2025-02-12 10:00:00",
-#         "date_to": "2025-02-12 12:00:00",
-#         "request_detailed": "1",
-#         "limit": 1000,
-#         "offset": 0,
-#     }
-#     # GET-запрос
-#     with APIClient() as api:
-#         response = api.get(params=params)
-#         pass
