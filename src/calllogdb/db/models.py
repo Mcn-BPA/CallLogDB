@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from sqlalchemy import DateTime, ForeignKey, Text
+from sqlalchemy import ForeignKey, Text
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 
@@ -86,8 +86,8 @@ class Event(Base):
     event_status: Mapped[str | None] = mapped_column()
     event_dst_num: Mapped[str | None] = mapped_column()
     event_dst_type: Mapped[str | None] = mapped_column()
-    event_start_time: Mapped[DateTime | None] = mapped_column()
-    event_end_time: Mapped[DateTime | None] = mapped_column()
+    event_start_time: Mapped[datetime | None] = mapped_column()
+    event_end_time: Mapped[datetime | None] = mapped_column()
     event_talk_time: Mapped[int | None] = mapped_column()
     event_wait_time: Mapped[int | None] = mapped_column()
     event_total_time: Mapped[int | None] = mapped_column()
