@@ -2,12 +2,13 @@ import json
 from dataclasses import asdict
 from datetime import datetime
 
-from models import ApiVars, Base, Call, Date, Event
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-from calllogdb.core.constants import DB_URL
+from calllogdb.core import DB_URL
 from calllogdb.types import Call as CallData
+
+from .models import ApiVars, Base, Call, Date, Event
 
 engine = create_engine(DB_URL, echo=True)
 Session = sessionmaker(engine)
