@@ -6,6 +6,8 @@ from dotenv import load_dotenv
 # Загружаем переменные окружения из .env
 load_dotenv()
 
+DB_URL = "sqlite:///db/database.db"
+
 
 @dataclass(frozen=True)
 class Config:
@@ -21,4 +23,5 @@ class Config:
     log_level: str = field(default_factory=lambda: os.getenv("LOG_LEVEL", "INFO"))
 
 
+# Экземпляр настроек, который можно использовать по умолчанию
 config = Config()
