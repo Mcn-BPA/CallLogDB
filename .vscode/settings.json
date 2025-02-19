@@ -4,6 +4,7 @@
     "answerdate",
     "apivars",
     "calldate",
+    "calllog",
     "calltype",
     "dtmf",
     "etype",
