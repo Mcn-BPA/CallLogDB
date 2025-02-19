@@ -2,3 +2,4 @@ test.json
 __pycache__
 заметки.txt
 .env
+test.py
