@@ -1,4 +1,4 @@
-from typing import Any, Optional, cast
+from typing import Any, cast
 
 import requests
 from requests.adapters import HTTPAdapter
@@ -33,7 +33,7 @@ class APIClient:
         self.session.mount("http://", adapter)
         self.session.mount("https://", adapter)
 
-    def get(self, *, params: Optional[dict[str, Any]] = None) -> dict[str, Any]:
+    def get(self, *, params: dict[str, Any] | None = None) -> dict[str, Any]:
         """
         Отправляет GET-запрос с указанными параметрами и возвращает результат в формате JSON.
         """
