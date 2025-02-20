@@ -60,29 +60,6 @@ class CallLog:
     Основной класс работы с call_log
     """
 
-    # @staticmethod
-    # def get_data_hh(**kwargs: Any) -> None:
-    #     """
-    #     Принимает структуру
-
-    #     Args:
-    #         year: int | None = None
-    #         month: int | None = None
-    #         day: int | None = None
-    #         hour: int = 0
-    #         minute: int = 0
-    #         second: int = 0
-    #     """
-    #     print(kwargs)
-    #     params = RequestParams(
-    #         date_from=DateParams(**kwargs).date,
-    #     )
-    #     print(params)
-
-    # print(f"date_from: {date_from.to_datetime()} date_to: {date_to.to_datetime()}")
-
-    # def get_data_dd(self, num_days: int = 1, *, year: int | None = None) -> None: ...
-
     @staticmethod
     def get_data_from_month(month: int, *, year: int = DateParams().year) -> None:
         params = RequestParams(
@@ -96,3 +73,10 @@ class CallLog:
             data = api.get(params=asdict(params))
 
             Calls.from_dict(data.get("items", []))
+
+    @staticmethod
+    def get_data_from_day(day: int, *, year: int = ..., month: int = ...) -> None: ...
+    @staticmethod
+    def get_data_from_hours(hour: int) -> None: ...
+    @staticmethod
+    def get_data_for_interval(*, date_from: datetime, date_to: datetime) -> None: ...
