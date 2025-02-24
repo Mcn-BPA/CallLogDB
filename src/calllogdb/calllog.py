@@ -6,6 +6,7 @@ from dateutil.relativedelta import relativedelta
 from icecream import ic
 
 from calllogdb.api import APIClient
+from calllogdb.db import Database
 from calllogdb.types import Calls
 
 # TODO берёт за месяц (можно передать год и месяц)
@@ -65,14 +66,17 @@ class CallLog:
         params = RequestParams(
             date_from=DateParams(year=year, month=month, day=1, hour=0).adjust_date(-1, "month"),
             date_to=DateParams(year=year, month=month, day=1, hour=0).date,
-            limit=10,
+            limit=1,
         )
         ic(params)
 
         with APIClient() as api:
             data = api.get(params=asdict(params))
 
-            Calls.from_dict(data.get("items", []))
+            data_calls = Calls.from_dict(data.get("items", []))
+
+            db = Database()
+            db.insert_many(data_calls)
 
     @staticmethod
     def get_data_from_day(day: int, *, year: int = ..., month: int = ...) -> None: ...
