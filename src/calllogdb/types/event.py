@@ -323,7 +323,6 @@ class CodeEvent(EventBase):
 @dataclass
 @EventBase.register("transfered")
 class TransferedEvent(EventBase):
-
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> "TransferedEvent":
         init_params = cls.extract_common_fields(data)
