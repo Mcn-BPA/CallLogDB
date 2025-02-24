@@ -1,4 +1,4 @@
-from dataclasses import dataclass, field, fields
+from dataclasses import asdict, dataclass, field, fields
 from datetime import datetime, timedelta
 from typing import Any
 
@@ -97,3 +97,8 @@ class Call:
             events=[EventBase.from_dict(ed) for ed in events_data],
             **filtered_data,
         )
+
+    def del_events(self) -> dict[str, Any]:
+        data = asdict(self)
+        data.pop("events", None)
+        return data

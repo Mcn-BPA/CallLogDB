@@ -1,5 +1,5 @@
 import re
-from dataclasses import dataclass
+from dataclasses import asdict, dataclass
 from datetime import datetime, timedelta
 from typing import Any, Callable, ClassVar, TypeVar
 
@@ -8,7 +8,7 @@ from calllogdb.utils import parse_datetime, parse_timedelta_seconds
 T = TypeVar("T", bound="EventBase")
 
 
-# Базовый класс для событий с 5 общими полями
+# Базовый класс для событий с общими полями
 @dataclass
 class EventBase:
     """
@@ -135,3 +135,8 @@ class EventBase:
         if etype not in cls._registry:
             raise ValueError(f"Неизвестный тип события: {etype}")
         return cls._registry[etype].from_dict(data)
+
+    def del_api_vars(self) -> dict[str, Any]:
+        data = asdict(self)
+        data.pop("api_vars", None)
+        return data
