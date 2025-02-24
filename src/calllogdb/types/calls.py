@@ -7,6 +7,7 @@ from .call import Call
 
 ic.disable()
 
+
 @dataclass
 class Calls:
     calls: list[Call] = field(default_factory=list)
@@ -15,4 +16,4 @@ class Calls:
     def from_dict(cls, data: list[dict[str, Any]]) -> "Calls":
         ic(list(data[0].keys()))
         ic(len(list(data[0].keys())))
-        return cls(calls=[Call.from_dict(d) for d in data])
+        return cls(calls=[Call.from_dict(item) for item in data])

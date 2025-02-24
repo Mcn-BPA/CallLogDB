@@ -12,7 +12,7 @@ from .call_log import CallLog
 from .core import Config, config
 from .db import Database
 from .types import Call, Calls, EventBase
-from .utils import parse_datetime
+from .utils import parse_datetime, parse_timedelta_seconds
 
 __all__ = [
     "CallLog",

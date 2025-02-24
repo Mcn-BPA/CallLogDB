@@ -1,7 +1,7 @@
 # pre-commit run --all-files
 repos:
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.9.6  # укажите актуальную версию Ruff
+    rev: v0.9.7  # укажите актуальную версию Ruff
     hooks:
       - id: ruff
         args: ["--fix"]

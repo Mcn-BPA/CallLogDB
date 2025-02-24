@@ -1,16 +1,25 @@
-from dataclasses import field, fields
-from datetime import datetime
+from dataclasses import dataclass, field, fields
+from datetime import datetime, timedelta
 from typing import Any
 
 from icecream import ic
-from pydantic import Field
-from pydantic.dataclasses import dataclass
 
 from calllogdb.utils import parse_datetime
 
 from .event_base import EventBase
 
 ic.disable()
+
+_ALIASES: dict[str, str] = {
+    "callid": "call_id",
+    "date": "call_date",
+    "end_date": "end_time",
+    "talktime": "talk_time",
+    "waittime": "wait_time",
+    "billsec": "total_time",
+    "status": "call_status",
+    "type": "call_type",
+}
 
 
 @dataclass
@@ -19,28 +28,28 @@ class Call:
     Класс типа звонка
     """
 
-    call_id: str = Field("", alias="callid")
-    call_date: datetime | None = Field(None, alias="date")
-    answer_date: datetime | None = Field(None, alias="answer_date")
-    end_time: datetime | None = Field(None, alias="end_date")
-    call_type: str | None = Field(None, alias="type")
-    src_type: str | None = Field(None, alias="src_type")
-    call_status: str | None = Field(None, alias="status")
-    hangup_reason: str | None = Field(None, alias="hangup_reason")
-    dst_type: str | None = Field(None, alias="dst_type")
-    dst_num: str | None = Field(None, alias="dst_num")
-    dst_name: str | None = Field(None, alias="dst_name")
-    did: str | None = Field(None, alias="did")
-    did_num: str | None = Field(None, alias="did_num")
-    src_name: str | None = Field(None, alias="src_name")
-    src_num: str | None = Field(None, alias="src_num")
-    total_time: int | None = Field(None, alias="billsec")
-    wait_time: int | None = Field(None, alias="waittime")
-    talk_time: int | None = Field(None, alias="talktime")
-    events_count: int | None = Field(None, alias="events_count")
-    transfered_linked_to: bool = Field(False, alias="transfered_linked_to")
-    vpbx_id: int | None = Field(None, alias="vpbx_id")
-    events: list[EventBase] = field(default_factory=list, metadata={"alias": "events"})
+    call_id: str
+    call_status: str | None = None
+    call_type: str | None = None
+    did: str | None = None
+    dst_num: str | None = None
+    dst_name: str | None = None
+    did_num: str | None = None
+    dst_type: str | None = None
+    src_name: str | None = None
+    src_num: str | None = None
+    src_type: str | None = None
+    hangup_reason: str | None = None
+    answer_date: datetime | None = None
+    call_date: datetime | None = None
+    end_time: datetime | None = None
+    events_count: int | None = None
+    total_time: timedelta | None = None
+    wait_time: timedelta | None = None
+    talk_time: timedelta | None = None
+    vpbx_id: int | None = None
+    transfered_linked_to: bool = False
+    events: list["EventBase"] = field(default_factory=list)
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> "Call":
@@ -64,18 +73,26 @@ class Call:
             >>> print(call.id)
             123
         """
-        events_data = data.pop("events", [])  # Извлекаем события
-
         call_fields: set[str] = {field.name for field in fields(cls)}
 
-        # Преобразуем строки в `datetime`
-        for date_field in ["answer_date", "date", "end_date"]:
-            data[date_field] = parse_datetime(data[date_field])
+        # Переименовываем ключи, если они есть в ALIASES
+        mapped_data = {_ALIASES.get(k, k): v for k, v in data.items()}
+        # удаляем events чтобы он не попал в filtered_data
+        events_data = mapped_data.pop("events", [])
+
+        # Конвертируем даты
+        for date_field in ["answer_date", "call_date", "end_time"]:
+            if date_field in mapped_data:
+                mapped_data[date_field] = parse_datetime(mapped_data[date_field])
+
+        # Конвертируем временные интервалы
+        for time_field in ["total_time", "wait_time", "talk_time"]:
+            if time_field in mapped_data:
+                mapped_data[time_field] = timedelta(seconds=int(mapped_data[time_field]))
 
         # Фильтруем только допустимые поля
-        filtered_data = {k: v for k, v in data.items() if k in call_fields}
-        ic(list(filtered_data.keys()))
-        ic(len(list(filtered_data.keys())))
+        filtered_data = {k: v for k, v in mapped_data.items() if k in call_fields}
+
         return cls(
             events=[EventBase.from_dict(ed) for ed in events_data],
             **filtered_data,

@@ -1,9 +1,9 @@
 import re
 from dataclasses import dataclass
-from datetime import datetime
+from datetime import datetime, timedelta
 from typing import Any, Callable, ClassVar, TypeVar
 
-from calllogdb.utils import parse_datetime
+from calllogdb.utils import parse_datetime, parse_timedelta_seconds
 
 T = TypeVar("T", bound="EventBase")
 
@@ -23,11 +23,11 @@ class EventBase:
         event_status (str): Статус
         event_dst_num (str): Сокращённый номер
         event_dst_type (str): Тип события
-        event_start_time (str): Дата и время начала события
-        event_end_time (str): Дата и время окончания события
-        event_talk_time (int): Время разговора в событии
-        event_wait_time (int): Время ожидания в событии
-        event_total_time (int): Общее время события
+        event_start_time (datetime): Дата и время начала события
+        event_end_time (datetime): Дата и время окончания события
+        event_talk_time (timedelta): Время разговора в событии
+        event_wait_time (timedelta): Время ожидания в событии
+        event_total_time (timedelta): Общее время события
     """
 
     event_type: str
@@ -37,9 +37,9 @@ class EventBase:
     event_transfered_from: str
     event_start_time: datetime | None
     event_end_time: datetime | None
-    event_talk_time: int
-    event_wait_time: int
-    event_total_time: int
+    event_talk_time: timedelta | None
+    event_wait_time: timedelta | None
+    event_total_time: timedelta | None
 
     # Реестр для регистрации подклассов по event_type
     _registry: ClassVar[dict[str, type["EventBase"]]] = {}
@@ -97,9 +97,9 @@ class EventBase:
             "event_transfered_from": data.get("event_transfered_from", ""),
             "event_start_time": parse_datetime(data.get("event_start_time", "")),
             "event_end_time": parse_datetime(data.get("event_end_time", "")),
-            "event_talk_time": data.get("event_talk_time", 0),
-            "event_wait_time": data.get("event_wait_time", 0),
-            "event_total_time": data.get("event_total_time", 0),
+            "event_talk_time": parse_timedelta_seconds(data.get("event_talk_time")),
+            "event_wait_time": parse_timedelta_seconds(data.get("event_wait_time")),
+            "event_total_time": parse_timedelta_seconds(data.get("event_total_time")),
         }
 
     @classmethod
