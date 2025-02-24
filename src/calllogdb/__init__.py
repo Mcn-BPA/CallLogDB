@@ -8,7 +8,7 @@ CallLogDB – библиотека для работы с call_log.
 __version__ = "0.1.0"
 
 from .api import APIClient
-from .calllog import calllog
+from .calllog import CallLog
 from .core import Config, config
 from .db import Database
 from .types import Call, Calls, EventBase
