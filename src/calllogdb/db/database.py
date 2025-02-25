@@ -1,52 +1,66 @@
 import json
-from datetime import datetime
+from typing import Callable, ContextManager
 
-from sqlalchemy import create_engine, inspect
+from loguru import logger
+from sqlalchemy import create_engine
 from sqlalchemy.orm import Session as SQLAlchemySession
 from sqlalchemy.orm import sessionmaker
 
 from calllogdb.core import DB_URL
 from calllogdb.types import Call as CallData
-from calllogdb.types import Calls
 
 from .models import ApiVars, Base, Call, Date, Event
 
+# Создаём движок подключения
 engine = create_engine(DB_URL, echo=True)
-Session = sessionmaker(engine)
+
+# Создаём фабрику сессий
+SessionLocal = sessionmaker(
+    bind=engine,
+    autocommit=False,
+    autoflush=False,
+)
 
 
-class Database:
-    def __init__(self) -> None:
-        self.create()
+def init_db() -> None:
+    """Явная функция для создания всех таблиц в БД."""
+    Base.metadata.create_all(bind=engine)
+    logger.info("DB создана")
 
-    @staticmethod
-    def create() -> None:
-        # Получаем список существующих таблиц в базе данных
-        inspector = inspect(engine)
-        existing_tables = inspector.get_table_names()
-        # Получаем имена всех таблиц, описанных в metadata
-        expected_tables = list(Base.metadata.tables.keys())
 
-        # Если все ожидаемые таблицы уже существуют, выходим из метода
-        if all(table in existing_tables for table in expected_tables):
-            return
+class DatabaseSession:
+    """Менеджер контекста для работы с сессией SQLAlchemy"""
 
-        # Если хотя бы одной из таблиц нет – создаём недостающие
-        Base.metadata.create_all(engine)
+    def __enter__(self) -> SQLAlchemySession:
+        self.db = SessionLocal()
+        return self.db
 
-    @staticmethod
-    def prepare_call_objects(call: CallData) -> list[Base]:
-        """
-        Преобразует данные вызова в список ORM-объектов: Call, Date, Event, ApiVars.
-        Предполагается, что все классы (Call, Date, Event, ApiVars) наследуются от Base.
-        """
-        objects: list[Base] = []
-        new_call = Call(**(call.del_events()))
-        objects.append(new_call)
+    def __exit__(
+        self,
+        exc_type: type[BaseException] | None,
+        exc_value: BaseException | None,
+        traceback: object | None,
+    ) -> None:
+        try:
+            if exc_type is None:
+                self.db.commit()
+                logger.info("Авто-Коммит")
+        except Exception:
+            self.db.rollback()
+            raise
+        finally:
+            self.db.close()
 
-        if call.call_date:
-            date_obj: datetime = call.call_date
-            new_date = Date(
+
+class CallMapper:
+    """Отвечает за преобразование CallData в доменный объект Call с дочерними объектами."""
+
+    def map(self, call_data: CallData) -> Call:
+        new_call = Call(**call_data.del_events())
+
+        if call_data.call_date:
+            date_obj = call_data.call_date
+            new_call.date = Date(
                 call_id=new_call.call_id,
                 year=date_obj.year,
                 month=date_obj.month,
@@ -54,77 +68,59 @@ class Database:
                 hours=date_obj.hour,
                 minutes=date_obj.minute,
                 seconds=date_obj.second,
-                call=new_call,
             )
-            objects.append(new_date)
 
-        for index, event in enumerate(call.events):
-            new_event = Event(**(event.del_api_vars()), id=index, call=new_call)
-            objects.append(new_event)
-
-            api_vars: dict[str, str] | None = getattr(event, "api_vars", None)
+        new_call.events = []
+        for index, event in enumerate(call_data.events):
+            new_event = Event(**event.del_api_vars(), id=index, call_id=new_call.call_id)
+            new_call.events.append(new_event)
+            api_vars = getattr(event, "api_vars", None)
             if api_vars:
-                new_apivars = ApiVars(
-                    id=index,
-                    event_id=new_event.call_id,
-                    **{
-                        k: api_vars.pop(k, None)
-                        for k in [
-                            "account_id",
-                            "num_a",
-                            "num_b",
-                            "num_c",
-                            "scenario_id",
-                            "scenario_counter",
-                            "dest_link_name",
-                            "dtmf",
-                            "ivr_object_id",
-                            "ivr_schema_id",
-                            "stt_answer",
-                            "stt_question",
-                            "intent",
-                        ]
-                    },
-                    other=json.dumps(api_vars, indent=4),
-                    event=new_event,
-                )
-                objects.append(new_apivars)
+                new_event.api_vars = [
+                    ApiVars(
+                        id=new_event.id,
+                        event_id=new_call.call_id,
+                        **{
+                            k: api_vars.get(k)
+                            for k in [
+                                "account_id",
+                                "num_a",
+                                "num_b",
+                                "num_c",
+                                "scenario_id",
+                                "scenario_counter",
+                                "dest_link_name",
+                                "dtmf",
+                                "ivr_object_id",
+                                "ivr_schema_id",
+                                "stt_answer",
+                                "stt_question",
+                                "intent",
+                            ]
+                        },
+                        other=json.dumps(api_vars, indent=4),
+                    )
+                ]
+        return new_call
 
-        return objects
 
-    @staticmethod
-    def add_objects(session: SQLAlchemySession, objects: list[Base]) -> None:
-        """
-        Добавляет подготовленные объекты в сессию.
-        """
-        session.add_all(objects)
+class CallRepository:
+    """
+    Отвечает за сохранение объектов Call.
+    Для работы использует фабрику сессий, что позволяет подменять реализацию (например, для тестов).
+    """
 
-    @staticmethod
-    def commit_session(session: SQLAlchemySession) -> None:
-        """
-        Фиксирует изменения в рамках сессии.
-        """
-        session.commit()
+    def __init__(self, session_factory: Callable[[], ContextManager[SQLAlchemySession]] = DatabaseSession):
+        self._session_factory = session_factory
+        init_db()
 
-    @staticmethod
-    def insert_single(call: CallData) -> None:
-        """
-        Метод для вставки одного вызова.
-        """
-        with Session() as session:
-            objects = Database.prepare_call_objects(call)
-            Database.add_objects(session, objects)
-            Database.commit_session(session)
+    def save(self, call: Call) -> None:
+        with self._session_factory() as session:
+            session.merge(call)
+            session.commit()
 
-    @staticmethod
-    def insert_many(calls: Calls) -> None:
-        """
-        Метод для пакетной вставки нескольких вызовов.
-        """
-        with Session() as session:
-            all_objects: list[Base] = []
-            for call in calls.calls:
-                objs = Database.prepare_call_objects(call)
-                all_objects.extend(objs)
-            Database.add_objects(session, all_objects)
-            Database.commit_session(session)
+    def save_many(self, calls: list[Call]) -> None:
+        with self._session_factory() as session:
+            for call in calls:
+                session.merge(call)
+            session.commit()
