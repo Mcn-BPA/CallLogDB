@@ -2,13 +2,9 @@ from dataclasses import asdict, dataclass, field, fields
 from datetime import datetime, timedelta
 from typing import Any
 
-from icecream import ic
-
 from calllogdb.utils import parse_datetime
 
 from .event_base import EventBase
-
-ic.disable()
 
 _ALIASES: dict[str, str] = {
     "callid": "call_id",
