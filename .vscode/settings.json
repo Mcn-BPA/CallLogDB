@@ -3,6 +3,7 @@
     "парся",
     "answerdate",
     "apivars",
+    "autoflush",
     "billsec",
     "calldate",
     "callid",
@@ -227,5 +228,5 @@
       "multiline": true
     }
   ],
-  "explorer.excludeGitIgnore": true
+  "explorer.excludeGitIgnore": false
 }

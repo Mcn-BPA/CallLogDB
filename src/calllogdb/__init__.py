@@ -10,15 +10,16 @@ __version__ = "0.1.0"
 from .api import APIClient
 from .calllog import CallLog
 from .core import Config, config
-from .db import Database
+from .db import CallRepository, init_db
 from .types import Call, Calls, EventBase
 from .utils import parse_datetime, parse_timedelta_seconds
 
 __all__ = [
     "calllog",
     "APIClient",
+    "init_db",
     "Call",
     "Calls",
     "EventBase",
-    "Database",
+    "CallRepository",
 ]

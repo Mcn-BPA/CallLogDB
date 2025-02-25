@@ -1,15 +1,15 @@
 from dataclasses import asdict, dataclass, field
 from datetime import datetime, timedelta
-from typing import Literal
+from typing import Any, Literal
 
 from dateutil.relativedelta import relativedelta
-from icecream import ic
+from loguru import logger
 
 from calllogdb.api import APIClient
-from calllogdb.db import Database
+from calllogdb.db import CallRepository
+from calllogdb.db.database import CallMapper
 from calllogdb.types import Calls
 
-# TODO берёт за месяц (можно передать год и месяц)
 # TODO берёт за конкретный день (можно передать год месяц и день)
 
 # TODO берёт от текущего до указанного в часах и минутах (можно передать только количество часов и минут)
@@ -55,6 +55,10 @@ class RequestParams:
     limit: int = 1000
     offset: int = 0
 
+    def increase(self, step: int = 1000) -> None:
+        self.offset += step
+        self.limit += step
+
 
 class CallLog:
     """
@@ -64,19 +68,27 @@ class CallLog:
     @staticmethod
     def get_data_from_month(month: int, *, year: int = DateParams().year) -> None:
         params = RequestParams(
-            date_from=DateParams(year=year, month=month, day=1, hour=0).adjust_date(-1, "month"),
-            date_to=DateParams(year=year, month=month, day=1, hour=0).date,
-            limit=1,
+            date_from=DateParams(year=year, month=month, day=1, hour=0).date,
+            date_to=DateParams(year=year, month=month, day=2, hour=0).date, #.adjust_date(1, "month"),
+            limit=1000,
         )
-        ic(params)
+        logger.info(params)
 
         with APIClient() as api:
-            data = api.get(params=asdict(params))
+            response_list: list[dict[str, Any]] = []
+            while True:
+                response = api.get(params=asdict(params))
+                response_list.extend(response.get("items", []))
+                if len(response.get("items", [])) < (params.limit - params.offset):
+                    break
+                params.increase()
+                logger.info(f"{len(response.get("items", []))}")
 
-            data_calls = Calls.from_dict(data.get("items", []))
+        data_calls = Calls.from_dict(response_list)
 
-            db = Database()
-            db.insert_many(data_calls)
+        mapper = CallMapper()
+        mapped_calls = [mapper.map(call_data) for call_data in data_calls.calls]
+        CallRepository().save_many(mapped_calls)
 
     @staticmethod
     def get_data_from_day(day: int, *, year: int = ..., month: int = ...) -> None: ...
