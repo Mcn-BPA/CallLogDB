@@ -10,9 +10,9 @@ readme = "README.md"
 requires-python = ">=3.12"
 license = { text = "Proprietary - internal use only" }
 authors = [
-    { name = "miomelliot" },
-    { name = "Alexeyalexeyalexm" },
-    { name = "deydysh", email = "s89652158910@gmail.com" },
+    { name = "miomelliot", email = "s89652158910@gmail.com" },
+    { name = "Alexeyalexeyalexm", email = "silaenckov2014@yandex.ru" },
+    { name = "deydysh" },
 ]
 urls = { Homepage = "https://github.com/Mcn-BPA/CallLogDB" }
 classifiers = [
