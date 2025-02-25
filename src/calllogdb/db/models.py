@@ -41,7 +41,7 @@ class Call(Base):
         "Date",
         back_populates="call",
         uselist=False,
-        cascade="all, delete-orphan",
+        cascade="all, delete",
         passive_deletes=True,
     )
 

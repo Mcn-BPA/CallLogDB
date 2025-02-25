@@ -2,6 +2,6 @@
 Файл для создания модуля программы
 """
 
-from .database import Database
+from .database import CallRepository, init_db
 
-__all__ = ["Database"]
+__all__ = ["CallRepository", "init_db"]
