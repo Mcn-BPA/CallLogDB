@@ -69,7 +69,7 @@ class CallLog:
     def get_data_from_month(month: int, *, year: int = DateParams().year) -> None:
         params = RequestParams(
             date_from=DateParams(year=year, month=month, day=1, hour=0).date,
-            date_to=DateParams(year=year, month=month, day=2, hour=0).date, #.adjust_date(1, "month"),
+            date_to=DateParams(year=year, month=month, day=2, hour=0).adjust_date(1, "month"),
             limit=1000,
         )
         logger.info(params)
@@ -82,7 +82,7 @@ class CallLog:
                 if len(response.get("items", [])) < (params.limit - params.offset):
                     break
                 params.increase()
-                logger.info(f"{len(response.get("items", []))}")
+                logger.info(f"{len(response.get('items', []))}")
 
         data_calls = Calls.from_dict(response_list)
 
