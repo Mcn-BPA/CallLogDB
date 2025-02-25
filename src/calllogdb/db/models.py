@@ -1,6 +1,6 @@
 from datetime import datetime, timedelta
 
-from sqlalchemy import Boolean, DateTime, ForeignKey, Integer, Interval, Text
+from sqlalchemy import Boolean, DateTime, ForeignKey, ForeignKeyConstraint, Integer, Interval, Text
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 
@@ -14,6 +14,7 @@ class Call(Base):
     __tablename__ = "call"
 
     call_id: Mapped[str] = mapped_column(Text, primary_key=True)
+
     call_status: Mapped[str | None] = mapped_column(Text)
     call_type: Mapped[str | None] = mapped_column(Text)
     did: Mapped[str | None] = mapped_column(Text)
@@ -33,7 +34,7 @@ class Call(Base):
     wait_time: Mapped[timedelta | None] = mapped_column(Interval)
     talk_time: Mapped[timedelta | None] = mapped_column(Interval)
     vpbx_id: Mapped[str | None] = mapped_column(Text)
-    transfered_linked_to: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
+    transfered_linked_to: Mapped[bool] = mapped_column(Boolean, nullable=False, server_default="false")
 
     # Связь "один-к-одному" с моделью Date
     date: Mapped["Date | None"] = relationship(
@@ -53,19 +54,13 @@ class Call(Base):
         lazy="selectin",
     )
 
-    # магический метод для debug
-    def __repr__(self) -> str:
-        return (
-            f"Call(call_id={self.call_id!r}, answer_date={self.answer_date!r}, "
-            f"call_status={self.call_status!r}, call_date={self.call_date!r})"
-        )
-
 
 # Модель даты и времени
 class Date(Base):
     __tablename__ = "date"
 
     call_id: Mapped[str] = mapped_column(Text, ForeignKey("call.call_id", ondelete="CASCADE"), primary_key=True)
+
     year: Mapped[int] = mapped_column(Integer)
     month: Mapped[int] = mapped_column(Integer)
     day: Mapped[int] = mapped_column(Integer)
@@ -74,7 +69,7 @@ class Date(Base):
     seconds: Mapped[int] = mapped_column(Integer)
 
     # Обратная связь с моделью Call
-    call: Mapped["Call"] = relationship("Call", back_populates="date")
+    call: Mapped["Call"] = relationship("Call", back_populates="date", uselist=False)
 
 
 # Модель событий звонка
@@ -83,6 +78,7 @@ class Event(Base):
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     call_id: Mapped[str] = mapped_column(Text, ForeignKey("call.call_id", ondelete="CASCADE"), primary_key=True)
+
     event_type: Mapped[str | None] = mapped_column(Text)
     event_status: Mapped[str | None] = mapped_column(Text)
     event_dst_num: Mapped[str | None] = mapped_column(Text)
@@ -117,19 +113,14 @@ class Event(Base):
     # Обратная связь к модели Call (один-ко-многим)
     call: Mapped["Call"] = relationship("Call", back_populates="events")
 
-    def __repr__(self) -> str:
-        return (
-            f"Event(id={self.id!r}, call_id={self.call_id!r}, event_type={self.event_type!r}, "
-            f"event_status={self.event_status!r})"
-        )
-
 
 # Модель элемента api_vars
 class ApiVars(Base):
     __tablename__ = "api_vars"
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
-    event_id: Mapped[str] = mapped_column(Text, ForeignKey("event.call_id", ondelete="CASCADE"), primary_key=True)
+    event_id: Mapped[str] = mapped_column(Text, primary_key=True)
+
     account_id: Mapped[str | None] = mapped_column(Text)
     num_a: Mapped[str | None] = mapped_column(Text)
     num_b: Mapped[str | None] = mapped_column(Text)
@@ -144,6 +135,14 @@ class ApiVars(Base):
     stt_question: Mapped[str | None] = mapped_column(Text)
     intent: Mapped[str | None] = mapped_column(Text)
     other: Mapped[dict[str, str] | None] = mapped_column(JSONB)
+
+    __table_args__ = (
+        ForeignKeyConstraint(
+            ["id", "event_id"],
+            ["event.id", "event.call_id"],
+            ondelete="CASCADE",
+        ),
+    )
 
     # Обратная связь с моделью Event
     event: Mapped["Event"] = relationship("Event", back_populates="api_vars")
