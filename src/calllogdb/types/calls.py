@@ -10,4 +10,4 @@ class Calls:
 
     @classmethod
     def from_dict(cls, data: list[dict[str, Any]]) -> "Calls":
-        return cls(calls=[Call.from_dict(d) for d in data])
+        return cls(calls=[Call.from_dict(item) for item in data])

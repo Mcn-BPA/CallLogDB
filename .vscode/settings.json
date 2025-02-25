@@ -3,8 +3,13 @@
     "парся",
     "answerdate",
     "apivars",
+    "autoflush",
+    "billsec",
     "calldate",
+    "callid",
+    "calllog",
     "calltype",
+    "dateutil",
     "dtmf",
     "etype",
     "exten",
@@ -12,13 +17,16 @@
     "forcelist",
     "ondelete",
     "recog",
+    "relativedelta",
     "sessionmaker",
     "speechkit",
     "subcls",
+    "talktime",
     "timecondition",
     "transfered",
     "uselist",
-    "vpbx"
+    "vpbx",
+    "waittime"
   ],
   "commit-message-editor.staticTemplate": [
     "feat: Short description",
@@ -219,5 +227,6 @@
       "type": "text",
       "multiline": true
     }
-  ]
+  ],
+  "explorer.excludeGitIgnore": false
 }

@@ -1,9 +1,31 @@
-# pre-commit run --all-files
+[build-system]
+requires = ["setuptools>=42", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "calllogdb"
+version = "0.1.0"
+description = "Библиотека для работы с call_log"
+readme = "README.md"
+requires-python = ">=3.12"
+license = { text = "Proprietary - internal use only" }
+authors = [
+    { name = "miomelliot", email = "s89652158910@gmail.com" },
+    { name = "Alexeyalexeyalexm", email = "silaenckov2014@yandex.ru" },
+    { name = "deydysh" },
+]
+urls = { Homepage = "https://github.com/Mcn-BPA/CallLogDB" }
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: Other/Proprietary License",
+    "Operating System :: OS Independent",
+]
+
+
 [tool.ruff]
 exclude = [".git", "__pycache__", "build", "dist", "venv", "env", "migrations"]
 target-version = "py312"
 line-length = 120
-# preview = true
 
 [tool.ruff.lint]
 select = ["E", "F", "W", "B", "N", "I", "C"]
@@ -16,7 +38,7 @@ max-complexity = 8
 
 [tool.black]
 line-length = 120
-target-version = ['py312']
+target-version = ["py312"]
 
 
 [tool.isort]

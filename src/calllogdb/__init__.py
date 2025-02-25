@@ -1,7 +1,25 @@
 """
-Файл для создания модуля программы
+CallLogDB – библиотека для работы с call_log.
+
+Публичный API:
+    CallLog – основной класс для работы с call_log.
 """
 
-from .types import Call, Calls, EventBase
+__version__ = "0.1.0"
 
-__all__ = ["Call", "Calls", "EventBase"]
+from .api import APIClient
+from .calllog import CallLog
+from .core import Config, config
+from .db import CallRepository, init_db
+from .types import Call, Calls, EventBase
+from .utils import parse_datetime, parse_timedelta_seconds
+
+__all__ = [
+    "calllog",
+    "APIClient",
+    "init_db",
+    "Call",
+    "Calls",
+    "EventBase",
+    "CallRepository",
+]

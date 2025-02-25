@@ -321,6 +321,15 @@ class CodeEvent(EventBase):
 
 
 @dataclass
+@EventBase.register("transfered")
+class TransferedEvent(EventBase):
+    @classmethod
+    def from_dict(cls, data: dict[str, Any]) -> "TransferedEvent":
+        init_params = cls.extract_common_fields(data)
+        return cls(**init_params)
+
+
+@dataclass
 @EventBase.register("extnum")
 class ExtNumEvent(EventBase):
     api_vars: dict[str, str] = field(default_factory=dict)

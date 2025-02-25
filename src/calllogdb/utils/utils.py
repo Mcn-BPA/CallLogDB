@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 
 
 def parse_datetime(date_str: str) -> datetime | None:
@@ -16,3 +16,9 @@ def parse_datetime(date_str: str) -> datetime | None:
         return datetime.strptime(date_str, "%Y-%m-%d %H:%M:%S")
     except ValueError:
         return None
+
+
+def parse_timedelta_seconds(value: int | str | None) -> timedelta | None:
+    if value is None:
+        return None
+    return timedelta(seconds=int(value))
