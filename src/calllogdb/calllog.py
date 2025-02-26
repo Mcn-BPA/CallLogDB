@@ -3,18 +3,11 @@ from datetime import datetime, timedelta
 from typing import Any, Literal
 
 from dateutil.relativedelta import relativedelta
-from loguru import logger
 
 from calllogdb.api import APIClient
 from calllogdb.db import CallRepository
 from calllogdb.db.database import CallMapper
 from calllogdb.types import Calls
-
-# TODO берёт за конкретный день (можно передать год месяц и день)
-
-# TODO берёт от текущего до указанного в часах и минутах (можно передать только количество часов и минут)
-
-# TODO берёт от и до (принимает 2 параметра метки времени)
 
 
 @dataclass(kw_only=True)
@@ -65,15 +58,7 @@ class CallLog:
     Основной класс работы с call_log
     """
 
-    @staticmethod
-    def get_data_from_month(month: int, *, year: int = DateParams().year) -> None:
-        params = RequestParams(
-            date_from=DateParams(year=year, month=month, day=1, hour=0).date,
-            date_to=DateParams(year=year, month=month, day=2, hour=0).adjust_date(1, "month"),
-            limit=1000,
-        )
-        logger.info(params)
-
+    def requests(self, params: RequestParams) -> None:
         with APIClient() as api:
             response_list: list[dict[str, Any]] = []
             while True:
@@ -82,7 +67,6 @@ class CallLog:
                 if len(response.get("items", [])) < (params.limit - params.offset):
                     break
                 params.increase()
-                logger.info(f"{len(response.get('items', []))}")
 
         data_calls = Calls.from_dict(response_list)
 
@@ -90,9 +74,30 @@ class CallLog:
         mapped_calls = [mapper.map(call_data) for call_data in data_calls.calls]
         CallRepository().save_many(mapped_calls)
 
-    @staticmethod
-    def get_data_from_day(day: int, *, year: int = ..., month: int = ...) -> None: ...
-    @staticmethod
-    def get_data_from_hours(hour: int) -> None: ...
-    @staticmethod
-    def get_data_for_interval(*, date_from: datetime, date_to: datetime) -> None: ...
+    def get_data_from_month(self, month: int, *, year: int = DateParams().year) -> None:
+        params = RequestParams(
+            date_from=DateParams(year=year, month=month, day=1, hour=0).date,
+            date_to=DateParams(year=year, month=month, day=2, hour=0).adjust_date(1, "month"),
+        )
+        self.requests(params)
+
+    def get_data_from_day(self, day: int, *, year: int = DateParams().year, month: int = DateParams().month) -> None:
+        params = RequestParams(
+            date_from=DateParams(year=year, month=month, day=day, hour=0).date,
+            date_to=DateParams(year=year, month=month, day=day, hour=0).adjust_date(1, "day"),
+        )
+        self.requests(params)
+
+    def get_data_from_hours(self, hour: int = 1, *, minute: int = datetime.now().minute) -> None:
+        params = RequestParams(
+            date_from=DateParams(minute=minute).adjust_date(hour, "hour"),
+            date_to=DateParams(minute=minute).date,
+        )
+        self.requests(params)
+
+    def get_data_for_interval(self, *, date_from: datetime, date_to: datetime) -> None:
+        params = RequestParams(
+            date_from=date_from,
+            date_to=date_to,
+        )
+        self.requests(params)
