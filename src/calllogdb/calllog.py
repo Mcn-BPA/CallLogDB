@@ -3,11 +3,14 @@ from datetime import datetime, timedelta
 from typing import Any, Literal
 
 from dateutil.relativedelta import relativedelta
+from icecream import ic
 
 from calllogdb.api import APIClient
 from calllogdb.db import CallRepository
 from calllogdb.db.database import CallMapper
 from calllogdb.types import Calls
+
+ic.disable()
 
 
 @dataclass(kw_only=True)
@@ -58,12 +61,14 @@ class CallLog:
     Основной класс работы с call_log
     """
 
-    def requests(self, params: RequestParams) -> None:
+    @staticmethod
+    def requests(params: RequestParams) -> None:
         with APIClient() as api:
             response_list: list[dict[str, Any]] = []
             while True:
                 response = api.get(params=asdict(params))
                 response_list.extend(response.get("items", []))
+                ic(len(response.get("items", [])) < (params.limit - params.offset))
                 if len(response.get("items", [])) < (params.limit - params.offset):
                     break
                 params.increase()
@@ -79,6 +84,7 @@ class CallLog:
             date_from=DateParams(year=year, month=month, day=1, hour=0).date,
             date_to=DateParams(year=year, month=month, day=2, hour=0).adjust_date(1, "month"),
         )
+        ic(params)
         self.requests(params)
 
     def get_data_from_day(self, day: int, *, year: int = DateParams().year, month: int = DateParams().month) -> None:
@@ -86,13 +92,15 @@ class CallLog:
             date_from=DateParams(year=year, month=month, day=day, hour=0).date,
             date_to=DateParams(year=year, month=month, day=day, hour=0).adjust_date(1, "day"),
         )
+        ic(params)
         self.requests(params)
 
-    def get_data_from_hours(self, hour: int = 1, *, minute: int = datetime.now().minute) -> None:
+    def get_data_from_hours(self, hour: int = 1) -> None:
         params = RequestParams(
-            date_from=DateParams(minute=minute).adjust_date(hour, "hour"),
-            date_to=DateParams(minute=minute).date,
+            date_from=DateParams().date,
+            date_to=DateParams().adjust_date(hour, "hour"),
         )
+        ic(params)
         self.requests(params)
 
     def get_data_for_interval(self, *, date_from: datetime, date_to: datetime) -> None:
@@ -100,4 +108,5 @@ class CallLog:
             date_from=date_from,
             date_to=date_to,
         )
+        ic(params)
         self.requests(params)
