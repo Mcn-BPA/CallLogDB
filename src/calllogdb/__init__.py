@@ -15,7 +15,7 @@ from .types import Call, Calls, EventBase
 from .utils import parse_datetime, parse_timedelta_seconds
 
 __all__ = [
-    "calllog",
+    "CallLog",
     "APIClient",
     "init_db",
     "Call",

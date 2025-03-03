@@ -1,6 +1,7 @@
 {
   "cSpell.words": [
     "парся",
+    "Alexeyalexeyalexm",
     "answerdate",
     "apivars",
     "autoflush",
@@ -10,6 +11,7 @@
     "calllog",
     "calltype",
     "dateutil",
+    "deydysh",
     "dtmf",
     "etype",
     "exten",
@@ -19,6 +21,7 @@
     "recog",
     "relativedelta",
     "sessionmaker",
+    "setuptools",
     "speechkit",
     "subcls",
     "talktime",
