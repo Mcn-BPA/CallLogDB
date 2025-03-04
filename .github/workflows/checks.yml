@@ -28,7 +28,6 @@ jobs:
 
       - name: Initialize project
         run: |
-          uv init
           uv sync
 
       - name: Run Nox sessions
