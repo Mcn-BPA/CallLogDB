@@ -1,16 +1,35 @@
 {
   "cSpell.words": [
     "парся",
+    "Alexeyalexeyalexm",
     "answerdate",
+    "apivars",
+    "autoflush",
+    "billsec",
     "calldate",
+    "callid",
+    "calllog",
     "calltype",
+    "dateutil",
+    "deydysh",
+    "dtmf",
     "etype",
+    "exten",
     "extnum",
+    "forcelist",
+    "ondelete",
     "recog",
+    "relativedelta",
+    "sessionmaker",
+    "setuptools",
+    "speechkit",
     "subcls",
+    "talktime",
     "timecondition",
     "transfered",
-    "vpbx"
+    "uselist",
+    "vpbx",
+    "waittime"
   ],
   "commit-message-editor.staticTemplate": [
     "feat: Short description",
@@ -211,5 +230,6 @@
       "type": "text",
       "multiline": true
     }
-  ]
+  ],
+  "explorer.excludeGitIgnore": false
 }

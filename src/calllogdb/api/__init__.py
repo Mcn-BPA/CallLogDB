@@ -2,6 +2,6 @@
 Файл для создания модуля программы
 """
 
-from .calls import Calls
+from .api_client import APIClient
 
-__all__ = ["Calls"]
+__all__ = ["APIClient"]
