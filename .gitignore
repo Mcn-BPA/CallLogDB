@@ -1,7 +1,19 @@
-test.json
-__pycache__
-заметки.txt
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
 .env
+
+# Virtual environments
+.venv
+
+# tests
 test.py
+test.json
+
+# Docker
 docker-compose.yml
 Dockerfile

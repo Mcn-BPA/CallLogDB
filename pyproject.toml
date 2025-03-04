@@ -1,19 +1,15 @@
-[build-system]
-requires = ["setuptools>=42", "wheel"]
-build-backend = "setuptools.build_meta"
-
 [project]
 name = "calllogdb"
 version = "0.1.0"
 description = "Библиотека для работы с call_log"
 readme = "README.md"
-requires-python = ">=3.12"
-license = { text = "Proprietary - internal use only" }
 authors = [
     { name = "miomelliot", email = "s89652158910@gmail.com" },
     { name = "Alexeyalexeyalexm", email = "silaenckov2014@yandex.ru" },
     { name = "deydysh" },
 ]
+requires-python = ">=3.12"
+license = { text = "Proprietary - internal use only" }
 urls = { Homepage = "https://github.com/Mcn-BPA/CallLogDB" }
 classifiers = [
     "Programming Language :: Python :: 3",
@@ -21,30 +17,63 @@ classifiers = [
     "Operating System :: OS Independent",
 ]
 
+dependencies = [
+    "dotenv>=0.9.9",
+    "loguru>=0.7.3",
+    "python-dateutil>=2.9.0.post0",
+    "requests>=2.32.3",
+    "sqlalchemy>=2.0.38",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[dependency-groups]
+dev = [
+    "mypy>=1.15.0",
+    "nox[uv]>=2025.2.9",
+    "ruff>=0.9.8",
+    "types-python-dateutil>=2.9.0.20241206",
+    "types-requests>=2.32.0.20241016",
+]
 
 [tool.ruff]
-exclude = [".git", "__pycache__", "build", "dist", "venv", "env", "migrations"]
-target-version = "py312"
+exclude = [
+    ".git",
+    "__pycache__",
+    "build",
+    "dist",
+    "venv",
+    ".venv",
+    "env",
+    "migrations",
+]
 line-length = 120
+target-version = "py312"
 
 [tool.ruff.lint]
 select = ["E", "F", "W", "B", "N", "I", "C"]
 ignore = ["E203"]
 per-file-ignores = { "__init__.py" = ["F401"] }
+fixable = ["ALL"]
+
+[tool.ruff.format]
+line-ending = "auto"
+docstring-code-line-length = "dynamic"
 
 [tool.ruff.lint.mccabe]
 max-complexity = 8
 
+[tool.mypy]
+python_version = "3.12"
+ignore_missing_imports = true
+strict = true
+warn_unused_configs = true
+plugins = ["sqlalchemy.ext.mypy.plugin"]
 
-[tool.black]
-line-length = 120
-target-version = ["py312"]
+[tool.mypy-python_dateutil]
+ignore_missing_imports = true
 
-
-[tool.isort]
-profile = "black"
-line_length = 120
-multi_line_output = 3
-include_trailing_comma = true
-force_grid_wrap = 0
-use_parentheses = true
+[tool.mypy-requests]
+ignore_missing_imports = true
