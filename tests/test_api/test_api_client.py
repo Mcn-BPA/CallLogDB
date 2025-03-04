@@ -1,32 +1,94 @@
-import json
+import requests
+import responses
 
 from calllogdb.api.api_client import APIClient
+from calllogdb.core import config
 
 
-def test_api_client_record_response(vcr):
-    # Указываем путь к кассете и используем режим записи "all",
-    # чтобы всегда получать свежий ответ.
-    cassette_path = "tests/data/sample_api_response.json"
-    with vcr.use_cassette(cassette_path, record_mode="all", serializer="json"):
-        client = APIClient(url="http://example.com/api", token="dummy_token")
-        response = client.get(params={"q": "test"})
+def test_api_client_record_response():
+    with responses.RequestsMock() as rsps:
+        rsps.add(
+            responses.GET,
+            config.url,
+            json={"status": "ok", "data": [1, 2, 3]},
+            status=200,
+        )
 
-        # Выводим ответ в консоль для просмотра
-        print(json.dumps(response, indent=4))
-
-        # Временно делаем простую проверку, чтобы тест прошёл
-        # (после изучения структуры ответа можно добавить детальные проверки)
-        assert isinstance(response, dict)
+        client = APIClient()
+        response = client.get()
+        assert response == {"status": "ok", "data": [1, 2, 3]}
 
 
-# @responses.activate
-# def test_api_client_get_failure():
-#     test_url = "http://example.com/api"
-#     # Симулируем ошибку сервера (например, 500)
-#     responses.add(responses.GET, test_url, status=500)
+def test_api_client_empty_response():
+    with responses.RequestsMock() as rsps:
+        rsps.add(
+            responses.GET,
+            config.url,
+            json={},
+            status=200,
+        )
 
-#     client = APIClient(url=test_url, token="dummy_token")
-#     result = client.get(params={"q": "test"})
+        client = APIClient()
+        response = client.get()
+        assert response == {}
 
-#     # В случае ошибки возвращается пустой словарь
-#     assert result == {}
+
+def test_api_client_http_error():
+    with responses.RequestsMock() as rsps:
+        rsps.add(
+            responses.GET,
+            config.url,
+            status=500,
+        )
+
+        client = APIClient()
+        response = client.get()
+        assert response == {}
+
+
+def test_api_client_timeout():
+    with responses.RequestsMock() as rsps:
+        rsps.add(
+            responses.GET,
+            config.url,
+            body=requests.exceptions.Timeout(),
+        )
+
+        client = APIClient()
+        response = client.get()
+        assert response == {}
+
+
+def test_api_client_with_params():
+    with responses.RequestsMock() as rsps:
+        rsps.add(
+            responses.GET,
+            config.url,
+            json={"result": "success"},
+            match=[responses.matchers.query_param_matcher({"id": "123"})],
+            status=200,
+        )
+
+        client = APIClient()
+        response = client.get(params={"id": "123"})
+        assert response == {"result": "success"}
+
+
+def test_api_client_close():
+    client = APIClient()
+    client.close()
+    assert client.session is not None  # Проверяем, что объект session существует, но закрыт
+
+
+def test_api_client_context_manager():
+    with responses.RequestsMock() as rsps:
+        rsps.add(
+            responses.GET,
+            config.url,
+            json={"status": "ok"},
+            status=200,
+        )
+
+        with APIClient() as client:
+            response = client.get()
+            assert response == {"status": "ok"}
