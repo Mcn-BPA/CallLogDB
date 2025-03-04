@@ -17,7 +17,6 @@ classifiers = [
     "Operating System :: OS Independent",
 ]
 
-
 dependencies = [
     "dotenv>=0.9.9",
     "loguru>=0.7.3",
