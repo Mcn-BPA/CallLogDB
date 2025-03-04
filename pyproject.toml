@@ -9,13 +9,14 @@ authors = [
     { name = "deydysh" },
 ]
 requires-python = ">=3.12"
-license = { text = "Proprietary - internal use only" }
+license = { file = "LICENSE" }
 urls = { Homepage = "https://github.com/Mcn-BPA/CallLogDB" }
 classifiers = [
     "Programming Language :: Python :: 3",
     "License :: Other/Proprietary License",
     "Operating System :: OS Independent",
 ]
+
 
 dependencies = [
     "dotenv>=0.9.9",
