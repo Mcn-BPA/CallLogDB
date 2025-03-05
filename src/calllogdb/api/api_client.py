@@ -41,8 +41,12 @@ class APIClient:
             response: requests.Response = self.session.get(self.url, params=params)
             response.raise_for_status()
             return cast(dict[str, Any], response.json())
-        except requests.RequestException:
-            return {}
+        except requests.HTTPError as e:
+            if e.response is not None and e.response.status_code in [500, 502, 503, 504]:
+                return {}
+            raise
+        except requests.RequestException as e:
+            raise e
 
     def close(self) -> None:
         self.session.close()
