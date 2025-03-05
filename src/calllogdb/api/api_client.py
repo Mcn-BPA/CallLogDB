@@ -8,17 +8,17 @@ from calllogdb.core import config
 
 
 class APIClient:
-    def __init__(self, url: str = config.url, token: str = config.token):
+    def __init__(self, url: str = config.url, token: str = config.token) -> None:
         """
         Инициализация клиента для работы с API.
         """
-        self.url = url
-        self.token = token
+        self.url: str = url
+        self.token: str = token
         self.session = requests.Session()
         self.session.headers.update(
             {
                 "Accept": "application/json",
-                "Authorization": f"Bearer {self.token}",
+                "Authorization": f"{self.token}",
             }
         )
 
@@ -38,7 +38,7 @@ class APIClient:
         Отправляет GET-запрос с указанными параметрами и возвращает результат в формате JSON.
         """
         try:
-            response = self.session.get(self.url, params=params)
+            response: requests.Response = self.session.get(self.url, params=params)
             response.raise_for_status()
             return cast(dict[str, Any], response.json())
         except requests.RequestException:

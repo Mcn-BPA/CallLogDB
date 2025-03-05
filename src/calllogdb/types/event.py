@@ -1,6 +1,6 @@
 from dataclasses import dataclass, field
 from datetime import datetime
-from typing import Any
+from typing import Any, Literal
 
 from calllogdb.utils import _parse_datetime
 
@@ -51,7 +51,7 @@ class GptEvent(EventBase):
     @classmethod
     def extract_common_fields(cls, data: dict[str, Any]) -> dict[str, Any]:
         init_params: dict[str, Any] = super().extract_common_fields(data)
-        raw_api_vars = data.get("event_additional_info", {}).get("api_vars")
+        raw_api_vars: str | None = data.get("event_additional_info", {}).get("api_vars")
         init_params.update({"api_vars": cls.string_from_dict(raw_api_vars)})
         return init_params
 
@@ -71,7 +71,7 @@ class RobocallTaskEvent(EventBase):
     @classmethod
     def extract_common_fields(cls, data: dict[str, Any]) -> dict[str, Any]:
         init_params: dict[str, Any] = super().extract_common_fields(data)
-        raw_api_vars = data.get("event_additional_info", {}).get("api_vars")
+        raw_api_vars: str | None = data.get("event_additional_info", {}).get("api_vars")
         init_params.update({"api_vars": cls.string_from_dict(raw_api_vars)})
         return init_params
 
@@ -135,7 +135,11 @@ class QueueMemberEvent(EventBase):
     @classmethod
     def extract_common_fields(cls, data: dict[str, Any]) -> dict[str, Any]:
         init_params: dict[str, Any] = super().extract_common_fields(data)
-        init_params.update({"name": data.get("event_dst_name", "")})
+        init_params.update(
+            {
+                "event_dst_name": data.get("event_dst_name", ""),
+            }
+        )
         return init_params
 
     @classmethod
@@ -171,7 +175,7 @@ class HTTPEvent(EventBase):
     @classmethod
     def extract_common_fields(cls, data: dict[str, Any]) -> dict[str, Any]:
         init_params: dict[str, Any] = super().extract_common_fields(data)
-        raw_api_vars = data.get("event_additional_info", {}).get("api_vars")
+        raw_api_vars: str | None = data.get("event_additional_info", {}).get("api_vars")
         init_params.update({"api_vars": cls.string_from_dict(raw_api_vars)})
         return init_params
 
@@ -189,7 +193,7 @@ class APIEvent(EventBase):
     @classmethod
     def extract_common_fields(cls, data: dict[str, Any]) -> dict[str, Any]:
         init_params: dict[str, Any] = super().extract_common_fields(data)
-        raw_api_vars = data.get("event_additional_info", {}).get("api_vars")
+        raw_api_vars: str | None = data.get("event_additional_info", {}).get("api_vars")
         init_params.update({"api_vars": cls.string_from_dict(raw_api_vars)})
         return init_params
 
@@ -272,7 +276,7 @@ class SpeechRecogEvent(EventBase):
     def extract_common_fields(cls, data: dict[str, Any]) -> dict[str, Any]:
         init_params: dict[str, Any] = super().extract_common_fields(data)
         dialog = data.get("speechkit_dialog", [])
-        question = dialog[0].get("dialog_value", "") if dialog else ""
+        question: str | Literal[""] = dialog[0].get("dialog_value", "") if dialog else ""
         answer = dialog[-1].get("dialog_value", "") if dialog and len(dialog) > 1 else None
         init_params.update({"question": question, "answer": answer})
         return init_params
@@ -310,7 +314,7 @@ class CodeEvent(EventBase):
     @classmethod
     def extract_common_fields(cls, data: dict[str, Any]) -> dict[str, Any]:
         init_params: dict[str, Any] = super().extract_common_fields(data)
-        raw_api_vars = data.get("event_additional_info", {}).get("api_vars")
+        raw_api_vars: str | None = data.get("event_additional_info", {}).get("api_vars")
         init_params.update({"api_vars": cls.string_from_dict(raw_api_vars)})
         return init_params
 
@@ -337,7 +341,7 @@ class ExtNumEvent(EventBase):
     @classmethod
     def extract_common_fields(cls, data: dict[str, Any]) -> dict[str, Any]:
         init_params: dict[str, Any] = super().extract_common_fields(data)
-        raw_api_vars = data.get("event_additional_info", {}).get("api_vars")
+        raw_api_vars: str | None = data.get("event_additional_info", {}).get("api_vars")
         init_params.update({"api_vars": cls.string_from_dict(raw_api_vars)})
         return init_params
 

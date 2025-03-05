@@ -60,7 +60,7 @@ class CallLog:
     """
 
     @staticmethod
-    def requests(params: RequestParams) -> None:
+    def __requests(params: RequestParams) -> None:
         with APIClient() as api:
             response_list: list[dict[str, Any]] = []
             while True:
@@ -81,25 +81,25 @@ class CallLog:
             date_from=DateParams(year=year, month=month, day=1, hour=0).date,
             date_to=DateParams(year=year, month=month, day=2, hour=0).adjust_date(1, "month"),
         )
-        self.requests(params)
+        self.__requests(params)
 
     def get_data_from_day(self, day: int, *, year: int = DateParams().year, month: int = DateParams().month) -> None:
         params = RequestParams(
             date_from=DateParams(year=year, month=month, day=day, hour=0).date,
             date_to=DateParams(year=year, month=month, day=day, hour=0).adjust_date(1, "day"),
         )
-        self.requests(params)
+        self.__requests(params)
 
     def get_data_from_hours(self, hour: int = 1) -> None:
         params = RequestParams(
             date_from=DateParams().date,
             date_to=DateParams().adjust_date(hour, "hour"),
         )
-        self.requests(params)
+        self.__requests(params)
 
     def get_data_for_interval(self, *, date_from: datetime, date_to: datetime) -> None:
         params = RequestParams(
             date_from=date_from,
             date_to=date_to,
         )
-        self.requests(params)
+        self.__requests(params)
