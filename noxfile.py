@@ -1,7 +1,7 @@
 import nox
 
 nox.options.default_venv_backend = "uv|virtualenv"
-nox.options.sessions = ["ruff_format", "ruff", "mypy"]
+nox.options.sessions = ["ruff", "ruff_format", "mypy"]
 
 
 @nox.session(
