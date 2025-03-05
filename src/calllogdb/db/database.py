@@ -1,8 +1,9 @@
 import json
+from datetime import datetime
 from typing import Callable, ContextManager
 
 from loguru import logger
-from sqlalchemy import create_engine
+from sqlalchemy import Engine, create_engine
 from sqlalchemy.orm import Session as SQLAlchemySession
 from sqlalchemy.orm import sessionmaker
 
@@ -12,7 +13,7 @@ from calllogdb.types import Call as CallData
 from .models import ApiVars, Base, Call, Date, Event
 
 # Создаём движок подключения
-engine = create_engine(DB_URL, echo=True)
+engine: Engine = create_engine(DB_URL, echo=True)
 
 # Создаём фабрику сессий
 SessionLocal = sessionmaker(
@@ -32,7 +33,7 @@ class DatabaseSession:
     """Менеджер контекста для работы с сессией SQLAlchemy"""
 
     def __enter__(self) -> SQLAlchemySession:
-        self.db = SessionLocal()
+        self.db: SQLAlchemySession = SessionLocal()
         return self.db
 
     def __exit__(
@@ -59,7 +60,7 @@ class CallMapper:
         new_call = Call(**call_data.del_events())
 
         if call_data.call_date:
-            date_obj = call_data.call_date
+            date_obj: datetime = call_data.call_date
             new_call.date = Date(
                 call_id=new_call.call_id,
                 year=date_obj.year,
@@ -74,7 +75,7 @@ class CallMapper:
         for index, event in enumerate(call_data.events):
             new_event = Event(**event.del_api_vars(), id=index, call_id=new_call.call_id)
             new_call.events.append(new_event)
-            api_vars = getattr(event, "api_vars", None)
+            api_vars: dict[str, str] | None = getattr(event, "api_vars", None)
             if api_vars:
                 new_event.api_vars = [
                     ApiVars(
@@ -110,16 +111,23 @@ class CallRepository:
     Для работы использует фабрику сессий, что позволяет подменять реализацию (например, для тестов).
     """
 
-    def __init__(self, session_factory: Callable[[], ContextManager[SQLAlchemySession]] = DatabaseSession):
+    def __init__(self, session_factory: Callable[[], ContextManager[SQLAlchemySession]] = DatabaseSession) -> None:
         self._session_factory = session_factory
         init_db()
 
     def save(self, call: Call) -> None:
+        """
+        Сохраняет один объект Call в базе данных.
+        Использует сессию SQLAlchemy.
+        """
         with self._session_factory() as session:
             session.merge(call)
             session.commit()
 
     def save_many(self, calls: list[Call]) -> None:
+        """
+        Сохраняет список объектов Call в базе данных.
+        """
         with self._session_factory() as session:
             for call in calls:
                 session.merge(call)

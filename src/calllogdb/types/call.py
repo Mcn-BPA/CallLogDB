@@ -72,7 +72,7 @@ class Call:
         call_fields: set[str] = {field.name for field in fields(cls)}
 
         # Переименовываем ключи, если они есть в ALIASES
-        mapped_data = {_ALIASES.get(k, k): v for k, v in data.items()}
+        mapped_data: dict[str, Any] = {_ALIASES.get(k, k): v for k, v in data.items()}
         # удаляем events чтобы он не попал в filtered_data
         events_data = mapped_data.pop("events", [])
 
@@ -95,6 +95,6 @@ class Call:
         )
 
     def del_events(self) -> dict[str, Any]:
-        data = asdict(self)
+        data: dict[str, Any] = asdict(self)
         data.pop("events", None)
         return data

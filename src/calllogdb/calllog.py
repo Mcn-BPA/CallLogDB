@@ -7,6 +7,7 @@ from dateutil.relativedelta import relativedelta
 from calllogdb.api import APIClient
 from calllogdb.db import CallRepository
 from calllogdb.db.database import CallMapper
+from calllogdb.db.models import Call
 from calllogdb.types import Calls
 
 
@@ -63,16 +64,16 @@ class CallLog:
         with APIClient() as api:
             response_list: list[dict[str, Any]] = []
             while True:
-                response = api.get(params=asdict(params))
+                response: dict[str, Any] = api.get(params=asdict(params))
                 response_list.extend(response.get("items", []))
                 if len(response.get("items", [])) < (params.limit - params.offset):
                     break
                 params.increase()
 
-        data_calls = Calls.from_dict(response_list)
+        data_calls: Calls = Calls.from_dict(response_list)
 
         mapper = CallMapper()
-        mapped_calls = [mapper.map(call_data) for call_data in data_calls.calls]
+        mapped_calls: list[Call] = [mapper.map(call_data) for call_data in data_calls.calls]
         CallRepository().save_many(mapped_calls)
 
     def get_data_from_month(self, month: int, *, year: int = DateParams().year) -> None:

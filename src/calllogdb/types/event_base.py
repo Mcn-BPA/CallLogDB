@@ -48,8 +48,8 @@ class EventBase:
     def string_from_dict(string: str | None) -> dict[str, str]:
         if string is None:
             return {}
-        cleaned_string = re.sub(r"[{}()\[\]']", "", string)
-        pairs = [pair.strip() for pair in cleaned_string.split(",") if ":" in pair]
+        cleaned_string: str = re.sub(r"[{}()\[\]']", "", string)
+        pairs: list[str] = [pair.strip() for pair in cleaned_string.split(",") if ":" in pair]
 
         result_dict: dict[str, str] = {}
         for pair in pairs:
@@ -137,6 +137,6 @@ class EventBase:
         return cls._registry[etype].from_dict(data)
 
     def del_api_vars(self) -> dict[str, Any]:
-        data = asdict(self)
+        data: dict[str, Any] = asdict(self)
         data.pop("api_vars", None)
         return data
