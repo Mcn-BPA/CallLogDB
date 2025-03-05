@@ -87,7 +87,7 @@ class Call:
                 mapped_data[time_field] = timedelta(seconds=int(mapped_data[time_field]))
 
         # Фильтруем только допустимые поля
-        filtered_data = {k: v for k, v in mapped_data.items() if k in call_fields}
+        filtered_data: dict[str, Any] = {k: v for k, v in mapped_data.items() if k in call_fields}
 
         return cls(
             events=[EventBase.from_dict(ed) for ed in events_data],
