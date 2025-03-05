@@ -1,6 +1,7 @@
 import os
 import sys
 from dataclasses import dataclass, field
+from typing import Literal
 
 from dotenv import load_dotenv
 from loguru import logger
@@ -49,10 +50,13 @@ class Config:
         return f"postgresql+psycopg://{self.user}:{self.password}@{self.host}:{self.port}/{self.database}"
 
 
-def _setup_logging(log_level: str = "INFO", log_file: str | None = None) -> None:
+def setup_logging(
+    log_level: Literal["TRACE", "DEBUG", "INFO", "SUCCESS", "WARNING", "ERROR", "CRITICAL"] = "ERROR",
+    log_file: str | None = None,
+) -> None:
     logger.remove()
 
     if log_file:
-        logger.add(log_file, rotation="1 MB", retention="10 days", level=log_level)
+        logger.add(log_file, rotation="1 MB", retention="7 days", compression="zip", level=log_level)
     else:
         logger.add(sys.stderr, level=log_level)

@@ -22,3 +22,13 @@ def _parse_timedelta_seconds(value: int | str | None) -> timedelta | None:
     if value is None:
         return None
     return timedelta(seconds=int(value))
+
+
+def _mask_db_url(db_url: str) -> str:
+    """
+    Заменяет пароль в строке подключения на звёздочки.
+    Предполагается, что пароль находится между ":" и "@".
+    """
+    import re
+
+    return re.sub(r":([^:@]+)@", ":" + "*" * 6 + "@", db_url)

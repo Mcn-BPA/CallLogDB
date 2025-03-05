@@ -9,12 +9,13 @@ from sqlalchemy.orm import sessionmaker
 
 from calllogdb.core import DB_URL
 from calllogdb.types import Call as CallData
+from calllogdb.utils import _mask_db_url
 
 from .models import ApiVars, Base, Call, Date, Event
 
 # Создаём движок подключения
 engine: Engine = create_engine(DB_URL, echo=False)
-logger.debug("Создан движок подключения с DB_URL: {}", DB_URL)
+logger.debug("Создан движок подключения с DB_URL: {}", _mask_db_url(DB_URL))
 
 # Создаём фабрику сессий
 SessionLocal = sessionmaker(

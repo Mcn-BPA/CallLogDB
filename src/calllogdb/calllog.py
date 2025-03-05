@@ -30,7 +30,7 @@ class DateParams:
             hour=self.hour,
             minute=self.minute,
         )
-        logger.debug("Инициализирован DateParams с датой: {}", self.date)
+        # logger.debug("Инициализирован DateParams с датой: {}", self.date)
 
     def adjust_date(self, delta: int, field: Literal["year", "month", "day", "hour", "minute"]) -> datetime:
         adjustments: dict[str, timedelta | relativedelta] = {
@@ -118,11 +118,11 @@ class CallLog:
         logger.debug("Параметры запроса для дня: {}", asdict(params))
         self.__requests(params)
 
-    def get_data_from_hours(self, hour: int = 1) -> None:
+    def get_data_from_hours(self, hour: int = -1) -> None:
         logger.info("Получение данных за последние {} часов", hour)
         params = RequestParams(
-            date_from=DateParams().date,
-            date_to=DateParams().adjust_date(hour, "hour"),
+            date_from=DateParams().adjust_date(-hour, "hour"),
+            date_to=DateParams().date,
         )
         logger.debug("Параметры запроса для часов: {}", asdict(params))
         self.__requests(params)
