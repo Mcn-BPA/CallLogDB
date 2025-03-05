@@ -1,6 +1,7 @@
 from typing import Any, cast
 
 import requests
+from loguru import logger
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
 
@@ -33,25 +34,33 @@ class APIClient:
         self.session.mount("http://", adapter)
         self.session.mount("https://", adapter)
 
+        logger.info("APIClient инициализирован с URL: {}", self.url)
+
     def get(self, *, params: dict[str, Any] | None = None) -> dict[str, Any]:
         """
         Отправляет GET-запрос с указанными параметрами и возвращает результат в формате JSON.
         """
+        logger.debug("Отправка GET-запроса к {} с параметрами: {}", self.url, params)
         try:
             response: requests.Response = self.session.get(self.url, params=params)
             response.raise_for_status()
+            logger.debug("Получен успешный ответ: {} - {}", response.status_code, response.text[:200])
             return cast(dict[str, Any], response.json())
         except requests.HTTPError as e:
+            logger.error("HTTP ошибка при GET-запросе: {}", e)
             if e.response is not None and e.response.status_code in [500, 502, 503, 504]:
                 return {}
             raise
         except requests.RequestException as e:
+            logger.error("Ошибка запроса: {}", e)
             raise e
 
     def close(self) -> None:
+        logger.info("Закрытие сессии APIClient")
         self.session.close()
 
     def __enter__(self) -> "APIClient":
+        logger.debug("Вход в контекстный менеджер APIClient")
         return self
 
     def __exit__(
@@ -60,5 +69,8 @@ class APIClient:
         exc_value: BaseException | None,
         traceback: object | None,
     ) -> bool | None:
+        if exc_type:
+            logger.error("Исключение в контекстном менеджере APIClient: {}: {}", exc_type, exc_value)
+        logger.debug("Выход из контекстного менеджера APIClient")
         self.close()
         return None
