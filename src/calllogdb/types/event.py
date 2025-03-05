@@ -2,7 +2,7 @@ from dataclasses import dataclass, field
 from datetime import datetime
 from typing import Any
 
-from calllogdb.utils import parse_datetime
+from calllogdb.utils import _parse_datetime
 
 from .event_base import EventBase
 
@@ -116,7 +116,7 @@ class QueueEvent(EventBase):
             {
                 "name": data.get("event_additional_info", {}).get("name", ""),
                 "number": data.get("event_additional_info", {}).get("number", ""),
-                "event_answer_time": parse_datetime(data.get("event_answer_time", "")),
+                "event_answer_time": _parse_datetime(data.get("event_answer_time", "")),
             }
         )
         return init_params

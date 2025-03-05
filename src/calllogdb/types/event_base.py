@@ -3,7 +3,7 @@ from dataclasses import asdict, dataclass
 from datetime import datetime, timedelta
 from typing import Any, Callable, ClassVar, TypeVar
 
-from calllogdb.utils import parse_datetime, parse_timedelta_seconds
+from calllogdb.utils import _parse_datetime, _parse_timedelta_seconds
 
 T = TypeVar("T", bound="EventBase")
 
@@ -95,11 +95,11 @@ class EventBase:
             "event_dst_num": data.get("event_dst_num", ""),
             "event_dst_type": data.get("event_dst_type", ""),
             "event_transfered_from": data.get("event_transfered_from", ""),
-            "event_start_time": parse_datetime(data.get("event_start_time", "")),
-            "event_end_time": parse_datetime(data.get("event_end_time", "")),
-            "event_talk_time": parse_timedelta_seconds(data.get("event_talk_time")),
-            "event_wait_time": parse_timedelta_seconds(data.get("event_wait_time")),
-            "event_total_time": parse_timedelta_seconds(data.get("event_total_time")),
+            "event_start_time": _parse_datetime(data.get("event_start_time", "")),
+            "event_end_time": _parse_datetime(data.get("event_end_time", "")),
+            "event_talk_time": _parse_timedelta_seconds(data.get("event_talk_time")),
+            "event_wait_time": _parse_timedelta_seconds(data.get("event_wait_time")),
+            "event_total_time": _parse_timedelta_seconds(data.get("event_total_time")),
         }
 
     @classmethod
