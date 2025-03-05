@@ -1,12 +1,14 @@
 from datetime import datetime, timedelta
 
-from sqlalchemy import Boolean, DateTime, ForeignKey, ForeignKeyConstraint, Integer, Interval, Text
+from sqlalchemy import Boolean, DateTime, ForeignKey, ForeignKeyConstraint, Integer, Interval, MetaData, Text
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 
+from calllogdb.core import config
+
 
 class Base(DeclarativeBase):
-    pass
+    metadata = MetaData(schema=config.schema)
 
 
 # Модель звонков

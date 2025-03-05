@@ -75,7 +75,7 @@ class CallMapper:
         for index, event in enumerate(call_data.events):
             new_event = Event(**event.del_api_vars(), id=index, call_id=new_call.call_id)
             new_call.events.append(new_event)
-            api_vars = getattr(event, "api_vars", None)
+            api_vars: dict[str, str] | None = getattr(event, "api_vars", None)
             if api_vars:
                 new_event.api_vars = [
                     ApiVars(
@@ -116,11 +116,18 @@ class CallRepository:
         init_db()
 
     def save(self, call: Call) -> None:
+        """
+        Сохраняет один объект Call в базе данных.
+        Использует сессию SQLAlchemy.
+        """
         with self._session_factory() as session:
             session.merge(call)
             session.commit()
 
     def save_many(self, calls: list[Call]) -> None:
+        """
+        Сохраняет список объектов Call в базе данных.
+        """
         with self._session_factory() as session:
             for call in calls:
                 session.merge(call)

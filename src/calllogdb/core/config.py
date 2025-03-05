@@ -9,6 +9,7 @@ load_dotenv()
 
 @dataclass(frozen=True)
 class Config:
+
     # GET
     url: str = field(default_factory=lambda: os.getenv("CALL_LOG_URL", ""))
     token: str = field(default_factory=lambda: os.getenv("TOKEN", ""))
@@ -19,6 +20,7 @@ class Config:
     user: str = field(default_factory=lambda: os.getenv("DB_USER", ""))
     password: str = field(default_factory=lambda: os.getenv("DB_PASSWORD", ""))
     database: str = field(default_factory=lambda: os.getenv("DB_NAME", ""))
+    schema: str = field(default_factory=lambda: os.getenv("DB_SCHEMA", ""))
 
     # LOG
     log_level: str = field(default_factory=lambda: os.getenv("LOG_LEVEL", "INFO"))
