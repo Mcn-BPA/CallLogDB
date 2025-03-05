@@ -1,6 +1,6 @@
 [project]
 name = "calllogdb"
-version = "0.1.0"
+version = "0.1.1"
 description = "Библиотека для работы с call_log"
 readme = "README.md"
 authors = [
@@ -20,6 +20,7 @@ classifiers = [
 dependencies = [
     "dotenv>=0.9.9",
     "loguru>=0.7.3",
+    "psycopg>=3.2.5",
     "python-dateutil>=2.9.0.post0",
     "requests>=2.32.3",
     "sqlalchemy>=2.0.38",
