@@ -2,7 +2,7 @@ from dataclasses import asdict, dataclass, field, fields
 from datetime import datetime, timedelta
 from typing import Any
 
-from calllogdb.utils import parse_datetime
+from calllogdb.utils import _parse_datetime
 
 from .event_base import EventBase
 
@@ -79,7 +79,7 @@ class Call:
         # Конвертируем даты
         for date_field in ["answer_date", "call_date", "end_time"]:
             if date_field in mapped_data:
-                mapped_data[date_field] = parse_datetime(mapped_data[date_field])
+                mapped_data[date_field] = _parse_datetime(mapped_data[date_field])
 
         # Конвертируем временные интервалы
         for time_field in ["total_time", "wait_time", "talk_time"]:
