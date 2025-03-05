@@ -15,6 +15,10 @@ wheels/
 test.py
 test.json
 
+# Pytest
+cassettes
+
 # Docker
 docker-compose.yml
 Dockerfile
+.coverage
