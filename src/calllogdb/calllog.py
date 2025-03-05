@@ -3,6 +3,7 @@ from datetime import datetime, timedelta
 from typing import Any, Literal
 
 from dateutil.relativedelta import relativedelta
+from loguru import logger
 
 from calllogdb.api import APIClient
 from calllogdb.db import CallRepository
@@ -29,6 +30,7 @@ class DateParams:
             hour=self.hour,
             minute=self.minute,
         )
+        # logger.debug("Инициализирован DateParams с датой: {}", self.date)
 
     def adjust_date(self, delta: int, field: Literal["year", "month", "day", "hour", "minute"]) -> datetime:
         adjustments: dict[str, timedelta | relativedelta] = {
@@ -38,7 +40,9 @@ class DateParams:
             "month": relativedelta(months=delta),
             "year": relativedelta(years=delta),
         }
-        return self.date + adjustments[field]
+        adjusted_date: datetime = self.date + adjustments[field]
+        logger.debug("Дата {} скорректирована на {}: {}", field, delta, adjusted_date)
+        return adjusted_date
 
 
 @dataclass(kw_only=True)
@@ -50,10 +54,19 @@ class RequestParams:
     offset: int = 0
 
     def increase(self, step: int = 1000) -> None:
+        old_offset, old_limit = self.offset, self.limit
         self.offset += step
         self.limit += step
+        logger.debug(
+            "Параметры запроса увеличены: offset {} -> {}, limit {} -> {}",
+            old_offset,
+            self.offset,
+            old_limit,
+            self.limit,
+        )
 
 
+@dataclass(kw_only=True)
 class CallLog:
     """
     Основной класс работы с call_log
@@ -61,45 +74,64 @@ class CallLog:
 
     @staticmethod
     def __requests(params: RequestParams) -> None:
+        logger.info("Начало запроса данных с параметрами: {}", asdict(params))
         with APIClient() as api:
             response_list: list[dict[str, Any]] = []
             while True:
+                logger.debug("Отправка запроса с параметрами: {}", asdict(params))
                 response: dict[str, Any] = api.get(params=asdict(params))
-                response_list.extend(response.get("items", []))
-                if len(response.get("items", [])) < (params.limit - params.offset):
+                items = response.get("items", [])
+                logger.debug("Получено {} элементов", len(items))
+                response_list.extend(items)
+                if len(items) < (params.limit - params.offset):
+                    logger.info("Получено {} элементов, меньше чем ожидалось, завершаем запрос", len(items))
                     break
                 params.increase()
+                logger.debug("Параметры запроса обновлены: {}", asdict(params))
+        logger.info("Общее количество полученных элементов: {}", len(response_list))
 
         data_calls: Calls = Calls.from_dict(response_list)
+        logger.info("Преобразование данных в объект Calls завершено")
 
         mapper = CallMapper()
         mapped_calls: list[Call] = [mapper.map(call_data) for call_data in data_calls.calls]
+        logger.info("Маппинг завершен: получено {} объектов Call", len(mapped_calls))
+
         CallRepository().save_many(mapped_calls)
+        logger.info("Сохранение объектов Call завершено")
 
     def get_data_from_month(self, month: int, *, year: int = DateParams().year) -> None:
+        logger.info("Получение данных за месяц: {} года {}", month, year)
         params = RequestParams(
             date_from=DateParams(year=year, month=month, day=1, hour=0).date,
             date_to=DateParams(year=year, month=month, day=2, hour=0).adjust_date(1, "month"),
         )
+        logger.debug("Параметры запроса для месяца: {}", asdict(params))
         self.__requests(params)
 
     def get_data_from_day(self, day: int, *, year: int = DateParams().year, month: int = DateParams().month) -> None:
+        logger.info("Получение данных за день: {}-{}-{}", year, month, day)
         params = RequestParams(
             date_from=DateParams(year=year, month=month, day=day, hour=0).date,
             date_to=DateParams(year=year, month=month, day=day, hour=0).adjust_date(1, "day"),
         )
+        logger.debug("Параметры запроса для дня: {}", asdict(params))
         self.__requests(params)
 
-    def get_data_from_hours(self, hour: int = 1) -> None:
+    def get_data_from_hours(self, hour: int = -1) -> None:
+        logger.info("Получение данных за последние {} часов", hour)
         params = RequestParams(
-            date_from=DateParams().date,
-            date_to=DateParams().adjust_date(hour, "hour"),
+            date_from=DateParams().adjust_date(-hour, "hour"),
+            date_to=DateParams().date,
         )
+        logger.debug("Параметры запроса для часов: {}", asdict(params))
         self.__requests(params)
 
     def get_data_for_interval(self, *, date_from: datetime, date_to: datetime) -> None:
+        logger.info("Получение данных за интервал с {} по {}", date_from, date_to)
         params = RequestParams(
             date_from=date_from,
             date_to=date_to,
         )
+        logger.debug("Параметры запроса для интервала: {}", asdict(params))
         self.__requests(params)
