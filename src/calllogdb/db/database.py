@@ -13,7 +13,7 @@ from calllogdb.types import Call as CallData
 from .models import ApiVars, Base, Call, Date, Event
 
 # Создаём движок подключения
-engine: Engine = create_engine(DB_URL, echo=True)
+engine: Engine = create_engine(DB_URL, echo=False)
 
 # Создаём фабрику сессий
 SessionLocal = sessionmaker(
