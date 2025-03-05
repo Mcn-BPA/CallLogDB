@@ -9,7 +9,6 @@ load_dotenv()
 
 @dataclass(frozen=True)
 class Config:
-
     # GET
     url: str = field(default_factory=lambda: os.getenv("CALL_LOG_URL", ""))
     token: str = field(default_factory=lambda: os.getenv("TOKEN", ""))

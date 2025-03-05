@@ -7,18 +7,18 @@ nox.options.sessions = ["ruff_format", "ruff", "mypy"]
 @nox.session(
     reuse_venv=True,
 )
-def ruff_format(session: nox.Session) -> None:
+def ruff(session: nox.Session) -> None:
     session.install(".[dev]")
-    session.run("ruff", "format", ".", external=True)
-    session.run("ruff", "check", "--select", "I", "--fix", ".", external=True)
+    session.run("ruff", "check", ".", external=True)
 
 
 @nox.session(
     reuse_venv=True,
 )
-def ruff(session: nox.Session) -> None:
+def ruff_format(session: nox.Session) -> None:
     session.install(".[dev]")
-    session.run("ruff", "check", ".", external=True)
+    session.run("ruff", "format", ".", external=True)
+    session.run("ruff", "check", "--select", "I", "--fix", ".", external=True)
 
 
 @nox.session(
