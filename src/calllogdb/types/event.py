@@ -15,7 +15,7 @@ class AnnounceEvent(EventBase):
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> "AnnounceEvent":
-        init_params = cls.extract_common_fields(data)
+        init_params: dict[str, Any] = cls.extract_common_fields(data)
         return cls(**init_params)
 
 
@@ -26,7 +26,7 @@ class HangupEvent(EventBase):
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> "HangupEvent":
-        init_params = cls.extract_common_fields(data)
+        init_params: dict[str, Any] = cls.extract_common_fields(data)
         return cls(**init_params)
 
 
@@ -37,7 +37,7 @@ class IvrEvent(EventBase):
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> "IvrEvent":
-        init_params = cls.extract_common_fields(data)
+        init_params: dict[str, Any] = cls.extract_common_fields(data)
         return cls(**init_params)
 
 
@@ -50,14 +50,14 @@ class GptEvent(EventBase):
 
     @classmethod
     def extract_common_fields(cls, data: dict[str, Any]) -> dict[str, Any]:
-        init_params = super().extract_common_fields(data)
+        init_params: dict[str, Any] = super().extract_common_fields(data)
         raw_api_vars = data.get("event_additional_info", {}).get("api_vars")
         init_params.update({"api_vars": cls.string_from_dict(raw_api_vars)})
         return init_params
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> "GptEvent":
-        init_params = cls.extract_common_fields(data)
+        init_params: dict[str, Any] = cls.extract_common_fields(data)
         return cls(**init_params)
 
 
@@ -70,14 +70,14 @@ class RobocallTaskEvent(EventBase):
 
     @classmethod
     def extract_common_fields(cls, data: dict[str, Any]) -> dict[str, Any]:
-        init_params = super().extract_common_fields(data)
+        init_params: dict[str, Any] = super().extract_common_fields(data)
         raw_api_vars = data.get("event_additional_info", {}).get("api_vars")
         init_params.update({"api_vars": cls.string_from_dict(raw_api_vars)})
         return init_params
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> "RobocallTaskEvent":
-        init_params = cls.extract_common_fields(data)
+        init_params: dict[str, Any] = cls.extract_common_fields(data)
         return cls(**init_params)
 
 
@@ -90,13 +90,13 @@ class MenuEvent(EventBase):
 
     @classmethod
     def extract_common_fields(cls, data: dict[str, Any]) -> dict[str, Any]:
-        init_params = super().extract_common_fields(data)
+        init_params: dict[str, Any] = super().extract_common_fields(data)
         init_params.update({"exten": data.get("event_additional_info", {}).get("exten", "")})
         return init_params
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> "MenuEvent":
-        init_params = cls.extract_common_fields(data)
+        init_params: dict[str, Any] = cls.extract_common_fields(data)
         return cls(**init_params)
 
 
@@ -111,7 +111,7 @@ class QueueEvent(EventBase):
 
     @classmethod
     def extract_common_fields(cls, data: dict[str, Any]) -> dict[str, Any]:
-        init_params = super().extract_common_fields(data)
+        init_params: dict[str, Any] = super().extract_common_fields(data)
         init_params.update(
             {
                 "name": data.get("event_additional_info", {}).get("name", ""),
@@ -123,7 +123,7 @@ class QueueEvent(EventBase):
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> "QueueEvent":
-        init_params = cls.extract_common_fields(data)
+        init_params: dict[str, Any] = cls.extract_common_fields(data)
         return cls(**init_params)
 
 
@@ -134,13 +134,13 @@ class QueueMemberEvent(EventBase):
 
     @classmethod
     def extract_common_fields(cls, data: dict[str, Any]) -> dict[str, Any]:
-        init_params = super().extract_common_fields(data)
+        init_params: dict[str, Any] = super().extract_common_fields(data)
         init_params.update({"name": data.get("event_dst_name", "")})
         return init_params
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> "QueueMemberEvent":
-        init_params = cls.extract_common_fields(data)
+        init_params: dict[str, Any] = cls.extract_common_fields(data)
         return cls(**init_params)
 
 
@@ -153,13 +153,13 @@ class TimeConditionEvent(EventBase):
 
     @classmethod
     def extract_common_fields(cls, data: dict[str, Any]) -> dict[str, Any]:
-        init_params = super().extract_common_fields(data)
+        init_params: dict[str, Any] = super().extract_common_fields(data)
         init_params.update({"exten": data.get("event_additional_info", {}).get("exten", "")})
         return init_params
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> "TimeConditionEvent":
-        init_params = cls.extract_common_fields(data)
+        init_params: dict[str, Any] = cls.extract_common_fields(data)
         return cls(**init_params)
 
 
@@ -170,14 +170,14 @@ class HTTPEvent(EventBase):
 
     @classmethod
     def extract_common_fields(cls, data: dict[str, Any]) -> dict[str, Any]:
-        init_params = super().extract_common_fields(data)
+        init_params: dict[str, Any] = super().extract_common_fields(data)
         raw_api_vars = data.get("event_additional_info", {}).get("api_vars")
         init_params.update({"api_vars": cls.string_from_dict(raw_api_vars)})
         return init_params
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> "HTTPEvent":
-        init_params = cls.extract_common_fields(data)
+        init_params: dict[str, Any] = cls.extract_common_fields(data)
         return cls(**init_params)
 
 
@@ -188,14 +188,14 @@ class APIEvent(EventBase):
 
     @classmethod
     def extract_common_fields(cls, data: dict[str, Any]) -> dict[str, Any]:
-        init_params = super().extract_common_fields(data)
+        init_params: dict[str, Any] = super().extract_common_fields(data)
         raw_api_vars = data.get("event_additional_info", {}).get("api_vars")
         init_params.update({"api_vars": cls.string_from_dict(raw_api_vars)})
         return init_params
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> "APIEvent":
-        init_params = cls.extract_common_fields(data)
+        init_params: dict[str, Any] = cls.extract_common_fields(data)
         return cls(**init_params)
 
 
@@ -209,7 +209,7 @@ class SmsEvent(EventBase):
 
     @classmethod
     def extract_common_fields(cls, data: dict[str, Any]) -> dict[str, Any]:
-        init_params = super().extract_common_fields(data)
+        init_params: dict[str, Any] = super().extract_common_fields(data)
         init_params.update(
             {
                 "message": data.get("event_additional_info", {}).get("message", ""),
@@ -220,7 +220,7 @@ class SmsEvent(EventBase):
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> "SmsEvent":
-        init_params = cls.extract_common_fields(data)
+        init_params: dict[str, Any] = cls.extract_common_fields(data)
         return cls(**init_params)
 
 
@@ -231,7 +231,7 @@ class SwitchEvent(EventBase):
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> "SwitchEvent":
-        init_params = cls.extract_common_fields(data)
+        init_params: dict[str, Any] = cls.extract_common_fields(data)
         return cls(**init_params)
 
 
@@ -245,7 +245,7 @@ class CheckEvent(EventBase):
 
     @classmethod
     def extract_common_fields(cls, data: dict[str, Any]) -> dict[str, Any]:
-        init_params = super().extract_common_fields(data)
+        init_params: dict[str, Any] = super().extract_common_fields(data)
         init_params.update(
             {
                 "name": data.get("event_additional_info", {}).get("name", ""),
@@ -256,7 +256,7 @@ class CheckEvent(EventBase):
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> "CheckEvent":
-        init_params = cls.extract_common_fields(data)
+        init_params: dict[str, Any] = cls.extract_common_fields(data)
         return cls(**init_params)
 
 
@@ -270,7 +270,7 @@ class SpeechRecogEvent(EventBase):
 
     @classmethod
     def extract_common_fields(cls, data: dict[str, Any]) -> dict[str, Any]:
-        init_params = super().extract_common_fields(data)
+        init_params: dict[str, Any] = super().extract_common_fields(data)
         dialog = data.get("speechkit_dialog", [])
         question = dialog[0].get("dialog_value", "") if dialog else ""
         answer = dialog[-1].get("dialog_value", "") if dialog and len(dialog) > 1 else None
@@ -279,7 +279,7 @@ class SpeechRecogEvent(EventBase):
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> "SpeechRecogEvent":
-        init_params = cls.extract_common_fields(data)
+        init_params: dict[str, Any] = cls.extract_common_fields(data)
         return cls(**init_params)
 
 
@@ -292,13 +292,13 @@ class SynthesisEvent(EventBase):
 
     @classmethod
     def extract_common_fields(cls, data: dict[str, Any]) -> dict[str, Any]:
-        init_params = super().extract_common_fields(data)
+        init_params: dict[str, Any] = super().extract_common_fields(data)
         init_params.update({"message": data.get("event_additional_info", {}).get("message", "")})
         return init_params
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> "SynthesisEvent":
-        init_params = cls.extract_common_fields(data)
+        init_params: dict[str, Any] = cls.extract_common_fields(data)
         return cls(**init_params)
 
 
@@ -309,14 +309,14 @@ class CodeEvent(EventBase):
 
     @classmethod
     def extract_common_fields(cls, data: dict[str, Any]) -> dict[str, Any]:
-        init_params = super().extract_common_fields(data)
+        init_params: dict[str, Any] = super().extract_common_fields(data)
         raw_api_vars = data.get("event_additional_info", {}).get("api_vars")
         init_params.update({"api_vars": cls.string_from_dict(raw_api_vars)})
         return init_params
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> "CodeEvent":
-        init_params = cls.extract_common_fields(data)
+        init_params: dict[str, Any] = cls.extract_common_fields(data)
         return cls(**init_params)
 
 
@@ -325,7 +325,7 @@ class CodeEvent(EventBase):
 class TransferedEvent(EventBase):
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> "TransferedEvent":
-        init_params = cls.extract_common_fields(data)
+        init_params: dict[str, Any] = cls.extract_common_fields(data)
         return cls(**init_params)
 
 
@@ -336,14 +336,14 @@ class ExtNumEvent(EventBase):
 
     @classmethod
     def extract_common_fields(cls, data: dict[str, Any]) -> dict[str, Any]:
-        init_params = super().extract_common_fields(data)
+        init_params: dict[str, Any] = super().extract_common_fields(data)
         raw_api_vars = data.get("event_additional_info", {}).get("api_vars")
         init_params.update({"api_vars": cls.string_from_dict(raw_api_vars)})
         return init_params
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> "ExtNumEvent":
-        init_params = cls.extract_common_fields(data)
+        init_params: dict[str, Any] = cls.extract_common_fields(data)
         return cls(**init_params)
 
 
@@ -356,13 +356,13 @@ class BlackListEvent(EventBase):
 
     @classmethod
     def extract_common_fields(cls, data: dict[str, Any]) -> dict[str, Any]:
-        init_params = super().extract_common_fields(data)
+        init_params: dict[str, Any] = super().extract_common_fields(data)
         init_params.update({"exten": data.get("event_additional_info", {}).get("exten", "")})
         return init_params
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> "BlackListEvent":
-        init_params = cls.extract_common_fields(data)
+        init_params: dict[str, Any] = cls.extract_common_fields(data)
         return cls(**init_params)
 
 
@@ -373,13 +373,13 @@ class NoneEvent(EventBase):
 
     @classmethod
     def extract_common_fields(cls, data: dict[str, Any]) -> dict[str, Any]:
-        init_params = super().extract_common_fields(data)
+        init_params: dict[str, Any] = super().extract_common_fields(data)
         init_params.update({"event_did": data.get("event_did", "")})
         return init_params
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> "NoneEvent":
-        init_params = cls.extract_common_fields(data)
+        init_params: dict[str, Any] = cls.extract_common_fields(data)
         return cls(**init_params)
 
 
@@ -389,7 +389,7 @@ class UnknownEvent(EventBase):
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> "UnknownEvent":
-        init_params = cls.extract_common_fields(data)
+        init_params: dict[str, Any] = cls.extract_common_fields(data)
         # Сохраняем оставшиеся ключи, которых нет в общих полях
-        extra = {k: v for k, v in data.items() if k not in init_params}
+        extra: dict[str, Any] = {k: v for k, v in data.items() if k not in init_params}
         return cls(**init_params, data=extra)
