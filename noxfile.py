@@ -21,17 +21,13 @@ def ruff_format(session: nox.Session) -> None:
     session.run("ruff", "check", "--select", "I", "--fix", ".", external=True)
 
 
-@nox.session(
-    reuse_venv=True,
-)
+@nox.session(reuse_venv=True)
 def mypy(session: nox.Session) -> None:
     session.install(".[dev]")
     session.run("mypy", ".", external=True)
 
 
-@nox.session(
-    reuse_venv=True,
-)
+@nox.session(reuse_venv=True)
 def tests(session: nox.Session) -> None:
     session.install(".[dev]")
     session.run("pytest", "tests/", external=True)

@@ -78,6 +78,7 @@ docstring-code-line-length = "dynamic"
 max-complexity = 8
 
 [tool.mypy]
+exclude = ["tests/", "build/"]
 python_version = "3.12"
 ignore_missing_imports = true
 strict = true
