@@ -1,6 +1,6 @@
 [project]
 name = "calllogdb"
-version = "0.1.1"
+version = "0.1.2"
 description = "Библиотека для работы с call_log"
 readme = "README.md"
 authors = [
