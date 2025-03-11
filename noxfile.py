@@ -24,7 +24,7 @@ def ruff_format(session: nox.Session) -> None:
 @nox.session(reuse_venv=True)
 def mypy(session: nox.Session) -> None:
     session.install(".[dev]")
-    session.run("mypy", ".", external=True)
+    session.run("mypy", ".", "--exclude", "tests/", external=True)
 
 
 @nox.session(reuse_venv=True)

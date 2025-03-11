@@ -21,6 +21,7 @@
     "ondelete",
     "recog",
     "relativedelta",
+    "rsps",
     "sessionmaker",
     "setuptools",
     "speechkit",
