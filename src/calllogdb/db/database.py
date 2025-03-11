@@ -1,9 +1,11 @@
 import json
+import logging
 from datetime import datetime
-from typing import Callable, ContextManager
+from typing import Any, Callable, ContextManager
 
 from loguru import logger
-from sqlalchemy import Engine, create_engine
+from sqlalchemy import Connection, Engine, create_engine
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session as SQLAlchemySession
 from sqlalchemy.orm import sessionmaker
 
@@ -13,9 +15,10 @@ from calllogdb.utils import _mask_db_url
 
 from .models import ApiVars, Base, Call, Date, Event
 
+logging.getLogger("psycopg").setLevel(logging.CRITICAL)
+
 # Создаём движок подключения
 engine: Engine = create_engine(DB_URL, echo=False)
-logger.debug("Создан движок подключения с DB_URL: {}", _mask_db_url(DB_URL))
 
 # Создаём фабрику сессий
 SessionLocal = sessionmaker(
@@ -23,6 +26,13 @@ SessionLocal = sessionmaker(
     autocommit=False,
     autoflush=False,
 )
+
+
+def call_to_dict(call: Call) -> dict[str, Any]:
+    """
+    Преобразует объект Call в словарь, используя определения колонок таблицы.
+    """
+    return {column.name: getattr(call, column.name) for column in call.__table__.columns}
 
 
 def init_db() -> None:
@@ -36,6 +46,7 @@ class DatabaseSession:
     """Менеджер контекста для работы с сессией SQLAlchemy"""
 
     def __enter__(self) -> SQLAlchemySession:
+        logger.info("Создан движок подключения с DB_URL: {}", _mask_db_url(DB_URL))
         self.db: SQLAlchemySession = SessionLocal()
         logger.debug("Создана новая сессия SQLAlchemy: {}", self.db)
         return self.db
@@ -46,6 +57,12 @@ class DatabaseSession:
         exc_value: BaseException | None,
         traceback: object | None,
     ) -> None:
+        bind_obj: Engine | Connection = self.db.get_bind()
+        # Если это Connection, получаем его engine через атрибут engine
+        if isinstance(bind_obj, Engine):
+            engine: Engine = bind_obj
+        else:
+            engine = bind_obj.engine
         if exc_type is None:
             try:
                 self.db.commit()
@@ -53,10 +70,21 @@ class DatabaseSession:
             except Exception as e:
                 logger.exception("Ошибка при фиксации сессии: {}. Выполняется откат транзакции.", e)
                 self.db.rollback()
+                # Сбрасываем все соединения через engine.dispose()
+                try:
+                    engine.dispose()
+                    logger.info("Engine успешно сброшен после ошибки фиксации.")
+                except Exception as ex:
+                    logger.exception("Ошибка при сбросе Engine: {}", ex)
                 raise
         else:
             logger.error("Исключение в сессии SQLAlchemy: {}. Выполняется откат транзакции.", exc_value)
             self.db.rollback()
+            try:
+                engine.dispose()
+                logger.info("Engine успешно сброшен после исключения в сессии.")
+            except Exception as ex:
+                logger.exception("Ошибка при сбросе Engine: {}", ex)
         self.db.close()
         logger.debug("Сессия SQLAlchemy закрыта.")
 
@@ -115,7 +143,7 @@ class CallMapper:
                     )
                 ]
                 logger.debug("ApiVars установлены для события {}: {}", index, new_event.api_vars)
-        logger.info("Маппинг завершен для call_id: {} с {} событиями", new_call.call_id, len(new_call.events))
+        logger.debug("Маппинг завершен для call_id: {} с {} событиями", new_call.call_id, len(new_call.events))
         return new_call
 
 
@@ -130,25 +158,67 @@ class CallRepository:
         logger.debug("Инициализация CallRepository с фабрикой сессий: {}", session_factory)
         init_db()
 
+    def _is_duplicate_error(self, err: IntegrityError) -> bool:
+        """
+        Простейшая проверка ошибки на наличие сообщения о дублировании ключа.
+        В зависимости от СУБД может потребоваться более тонкая обработка.
+        """
+        return "duplicate key" in str(err.orig).lower()
+
     def save(self, call: Call) -> None:
         """
         Сохраняет один объект Call в базе данных.
-        Использует сессию SQLAlchemy.
+        Сначала пытается выполнить вставку через session.add,
+        а при конфликте дублирования выполняет merge.
         """
         logger.info("Начало сохранения объекта Call с call_id: {}", call.call_id)
         with self._session_factory() as session:
-            session.merge(call)
-            session.commit()
-            logger.info("Объект Call с call_id {} успешно сохранен", call.call_id)
+            try:
+                session.add(call)
+                session.commit()
+                logger.info("Объект Call с call_id {} успешно сохранен", call.call_id)
+            except IntegrityError as err:
+                session.rollback()
+                if self._is_duplicate_error(err):
+                    logger.warning("Найден дубликат для call_id {}, выполняется merge", call.call_id)
+                    try:
+                        session.merge(call)
+                        session.commit()
+                        logger.info("Merge успешно выполнен для call_id {}", call.call_id)
+                    except IntegrityError as merge_err:
+                        session.rollback()
+                        logger.error("Ошибка при merge объекта Call с call_id {}: {}", call.call_id, merge_err)
+                else:
+                    logger.error("Ошибка при сохранении объекта Call с call_id {}: {}", call.call_id, err)
 
-    def save_many(self, calls: list[Call]) -> None:
+    def save_many(self, calls: list[Call], batch_size: int = 500) -> None:
         """
-        Сохраняет список объектов Call в базе данных.
+        Сохраняет список объектов Call в базе данных с промежуточными коммитами.
+        Сначала пытается массовую вставку через session.add.
+        При обнаружении ошибки дублирования в пакете выполняет merge для каждого объекта.
+        При иной ошибке выполняется rollback.
         """
         logger.info("Начало сохранения {} объектов Call", len(calls))
         with self._session_factory() as session:
-            for call in calls:
-                session.merge(call)
-                logger.debug("Объект Call с call_id {} добавлен для сохранения", call.call_id)
-            session.commit()
-            logger.info("Все объекты Call успешно сохранены")
+            for i in range(0, len(calls), batch_size):
+                batch: list[Call] = calls[i : i + batch_size]
+                try:
+                    for call in batch:
+                        session.add(call)
+                    session.commit()
+                    logger.info("Сохранено {} записей (пакет {}-{})", len(batch), i, i + len(batch))
+                except IntegrityError as err:
+                    session.rollback()
+                    if self._is_duplicate_error(err):
+                        logger.warning("Найден дубликат в пакете {}-{}, выполняется merge", i, i + len(batch))
+                        try:
+                            for call in batch:
+                                session.merge(call)
+                            session.commit()
+                            logger.info("Merge успешно выполнен для пакета {}-{}", i, i + len(batch))
+                        except IntegrityError as merge_err:
+                            session.rollback()
+                            logger.error("Ошибка при merge пакета {}-{}: {}", i, i + len(batch), merge_err)
+                    else:
+                        logger.error("Ошибка при сохранении пакета {}-{}: {}", i, i + len(batch), err)
+                        session.rollback()
