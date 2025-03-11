@@ -30,7 +30,6 @@ class DateParams:
             hour=self.hour,
             minute=self.minute,
         )
-        # logger.debug("Инициализирован DateParams с датой: {}", self.date)
 
     def adjust_date(self, delta: int, field: Literal["year", "month", "day", "hour", "minute"]) -> datetime:
         adjustments: dict[str, timedelta | relativedelta] = {
@@ -94,6 +93,7 @@ class CallLog:
         logger.info("Преобразование данных в объект Calls завершено")
 
         mapper = CallMapper()
+        logger.info("Старт маппинга для: {} объектов Call", len(data_calls.calls))
         mapped_calls: list[Call] = [mapper.map(call_data) for call_data in data_calls.calls]
         logger.info("Маппинг завершен: получено {} объектов Call", len(mapped_calls))
 
@@ -101,10 +101,10 @@ class CallLog:
         logger.info("Сохранение объектов Call завершено")
 
     def get_data_from_month(self, month: int, *, year: int = DateParams().year) -> None:
-        logger.info("Получение данных за месяц: {} года {}", month, year)
+        logger.info("Получение данных за {} месяц(а) {} года", month, year)
         params = RequestParams(
             date_from=DateParams(year=year, month=month, day=1, hour=0).date,
-            date_to=DateParams(year=year, month=month, day=2, hour=0).adjust_date(1, "month"),
+            date_to=DateParams(year=year, month=month, day=1, hour=0).adjust_date(1, "month"),
         )
         logger.debug("Параметры запроса для месяца: {}", asdict(params))
         self.__requests(params)

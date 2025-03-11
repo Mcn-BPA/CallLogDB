@@ -12,7 +12,7 @@ from .db import CallRepository, init_db
 from .types import Call, Calls, EventBase
 from .utils import _parse_datetime, _parse_timedelta_seconds
 
-setup_logging()
+setup_logging("WARNING")
 
 __all__ = [
     "calllogdb",
@@ -22,4 +22,5 @@ __all__ = [
     "Calls",
     "EventBase",
     "CallRepository",
+    "setup_logging",
 ]
