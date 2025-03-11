@@ -118,7 +118,7 @@ class CallLog:
         logger.debug("Параметры запроса для дня: {}", asdict(params))
         self.__requests(params)
 
-    def get_data_from_hours(self, hour: int = -1) -> None:
+    def get_data_from_hours(self, hour: int = 1) -> None:
         logger.info("Получение данных за последние {} часов", hour)
         params = RequestParams(
             date_from=DateParams().adjust_date(-hour, "hour"),
