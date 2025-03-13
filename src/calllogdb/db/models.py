@@ -20,7 +20,6 @@ class Call(Base):
     call_status: Mapped[str | None] = mapped_column(Text)
     call_type: Mapped[str | None] = mapped_column(Text)
     did: Mapped[str | None] = mapped_column(Text)
-    did_num: Mapped[str | None] = mapped_column(Text)
     dst_name: Mapped[str | None] = mapped_column(Text)
     dst_num: Mapped[str | None] = mapped_column(Text)
     dst_type: Mapped[str | None] = mapped_column(Text)

@@ -30,7 +30,6 @@ class Call:
     did: str | None = None
     dst_num: str | None = None
     dst_name: str | None = None
-    did_num: str | None = None
     dst_type: str | None = None
     src_name: str | None = None
     src_num: str | None = None
