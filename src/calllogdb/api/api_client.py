@@ -9,7 +9,7 @@ from calllogdb.core import config
 
 
 class APIClient:
-    def __init__(self, url: str = config.url, token: str = config.token) -> None:
+    def __init__(self, url: str = config.url, token: str = config.token, retries_enabled: bool = True) -> None:
         """
         Инициализация клиента для работы с API.
         """
@@ -24,15 +24,16 @@ class APIClient:
         )
 
         # Настройка повторных попыток при неудачных запросах
-        retries = Retry(
-            total=5,
-            backoff_factor=1.0,
-            status_forcelist=[500, 502, 503, 504],
-            allowed_methods=["GET", "OPTIONS", "HEAD"],
-        )
-        adapter = HTTPAdapter(max_retries=retries)
-        self.session.mount("http://", adapter)
-        self.session.mount("https://", adapter)
+        if retries_enabled:
+            retries = Retry(
+                total=5,
+                backoff_factor=1.0,
+                status_forcelist=[500, 502, 503, 504],
+                allowed_methods=["GET", "OPTIONS", "HEAD"],
+            )
+            adapter = HTTPAdapter(max_retries=retries)
+            self.session.mount("http://", adapter)
+            self.session.mount("https://", adapter)
 
         logger.info("APIClient инициализирован с URL: {}", self.url)
 
@@ -46,6 +47,9 @@ class APIClient:
             response.raise_for_status()
             logger.debug("Получен успешный ответ: {} - {}", response.status_code, response.text[:200])
             return cast(dict[str, Any], response.json())
+        except requests.Timeout:
+            logger.error("Таймаут запроса к {}", self.url)
+            return {}
         except requests.HTTPError as e:
             logger.error("HTTP ошибка при GET-запросе: {}", e)
             if e.response is not None and e.response.status_code in [500, 502, 503, 504]:
