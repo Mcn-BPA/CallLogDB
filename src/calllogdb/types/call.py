@@ -30,7 +30,6 @@ class Call:
     did: str | None = None
     dst_num: str | None = None
     dst_name: str | None = None
-    did_num: str | None = None
     dst_type: str | None = None
     src_name: str | None = None
     src_num: str | None = None
@@ -46,6 +45,9 @@ class Call:
     vpbx_id: int | None = None
     transfered_linked_to: bool = False
     events: list["EventBase"] = field(default_factory=list)
+
+    def __post_init__(self) -> None:
+        pass
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> "Call":
