@@ -46,6 +46,9 @@ class Call:
     transfered_linked_to: bool = False
     events: list["EventBase"] = field(default_factory=list)
 
+    def __post_init__(self) -> None:
+        pass
+
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> "Call":
         """
