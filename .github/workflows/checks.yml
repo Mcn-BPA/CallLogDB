@@ -2,9 +2,9 @@ name: Code Checks
 
 on:
   push:
-    branches: ["main", "develop"]
+    branches: ["main", "Develop"]
   pull_request:
-    branches: ["main", "develop"]
+    branches: ["main", "Develop"]
 
 jobs:
   nox-checks:

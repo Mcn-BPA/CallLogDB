@@ -41,7 +41,7 @@ def test_api_client_http_error():
             status=500,
         )
 
-        client = APIClient()
+        client = APIClient(retries_enabled=False)
         response = client.get()
         assert response == {}
 
