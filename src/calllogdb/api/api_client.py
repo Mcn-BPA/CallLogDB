@@ -45,7 +45,7 @@ class APIClient:
         try:
             response: requests.Response = self.session.get(self.url, params=params)
             response.raise_for_status()
-            logger.debug("Получен успешный ответ: {} - {}", response.status_code, response.text[:200])
+            logger.debug("Получен успешный ответ: {} - {}", response.status_code, response.text[:100])
             return cast(dict[str, Any], response.json())
         except requests.Timeout:
             logger.error("Таймаут запроса к {}", self.url)

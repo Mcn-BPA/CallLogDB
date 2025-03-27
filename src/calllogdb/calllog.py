@@ -48,20 +48,17 @@ class DateParams:
 class RequestParams:
     date_from: datetime = field(default_factory=lambda: DateParams().date)
     date_to: datetime = field(default_factory=lambda: DateParams().date)
-    request_detailed: str = "1"
-    limit: int = 1000
+    request_detailed: int = 1
+    limit: int = 2000
     offset: int = 0
 
-    def increase(self, step: int = 1000) -> None:
-        old_offset, old_limit = self.offset, self.limit
-        self.offset += step
-        self.limit += step
+    def increase(self) -> None:
+        old_offset: int = self.offset
+        self.offset += self.limit
         logger.debug(
-            "Параметры запроса увеличены: offset {} -> {}, limit {} -> {}",
+            "Параметры запроса увеличены: offset {} -> {}",
             old_offset,
             self.offset,
-            old_limit,
-            self.limit,
         )
 
 
@@ -82,11 +79,10 @@ class CallLog:
                 items = response.get("items", [])
                 logger.debug("Получено {} элементов", len(items))
                 response_list.extend(items)
-                if len(items) < (params.limit - params.offset):
+                if len(items) < params.limit:
                     logger.info("Получено {} элементов, меньше чем ожидалось, завершаем запрос", len(items))
                     break
                 params.increase()
-                logger.debug("Параметры запроса обновлены: {}", asdict(params))
         logger.info("Общее количество полученных элементов: {}", len(response_list))
 
         data_calls: Calls = Calls.from_dict(response_list)
