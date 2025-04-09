@@ -42,10 +42,10 @@ markdown_extensions:
 nav:
   - Главная: index.md
   - Использование: usage.md
-  - Dev Tools: dev_tools.md
   - Модули:
       - API клиент: modules/api.md
       - Конфиги: modules/core.md
       - База данных: modules/db.md
       - Типы данных: modules/types.md
       - Утилиты: modules/utils.md
+  - Dev Tools: dev_tools.md
