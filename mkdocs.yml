@@ -2,17 +2,47 @@ site_name: CallLogDB
 theme:
   name: material
   features:
-    - navigation.tabs
+    # - navigation.tabs
     - content.code.copy
     - content.code.annotate
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/weather-night
+        name: Переключить на тёмную тему
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/weather-sunny
+        name: Переключить на светлую тему
+
+repo_url: https://github.com/mcn-bpa/CallLogDB
+repo_name: GitHub
+repo_icon: fontawesome/brands/github
+
 markdown_extensions:
   - codehilite
+  - admonition
+  - attr_list
+  - md_in_html
+  - pymdownx.tabbed:
+      alternate_style: true
   - pymdownx.superfences
   - pymdownx.highlight
+  - pymdownx.inlinehilite
+  - pymdownx.details
+  - pymdownx.snippets
+  - pymdownx.keys
+
 nav:
   - Главная: index.md
-  - Установка: installation.md
   - Использование: usage.md
+  - Dev Tools: dev_tools.md
   - API:
       - Обзор API: api_reference.md
       - Модули:

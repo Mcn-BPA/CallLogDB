@@ -1,17 +1,47 @@
-# Welcome to MkDocs
+# CallLogDB
 
-For full documentation visit [mkdocs.org](https://www.mkdocs.org).
+CallLogDB — библиотека для получения, парсинга и сохранения логов звонков в базу данных PostgreSQL, разработанная для отдела автоматизации MCN Telecom.
 
-## Commands
+---
 
-* `mkdocs new [dir-name]` - Create a new project.
-* `mkdocs serve` - Start the live-reloading docs server.
-* `mkdocs build` - Build the documentation site.
-* `mkdocs -h` - Print help message and exit.
+## Установка
 
-## Project layout
+Рекомендуем использовать `uv` для установки, так как он быстрее стандартного `pip` и оптимизирует работу с виртуальными окружениями.
 
-    mkdocs.yml    # The configuration file.
-    docs/
-        index.md  # The documentation homepage.
-        ...       # Other markdown pages, images and other files.
+??? question "Что делать, если у вас не установлен uv?"
+    для начало проверьте
+    ``` sh
+    uv -V
+    ```
+    ошибка? тогда установи его:
+
+    === "macOS and Linux"
+        ``` sh
+        curl -LsSf https://astral.sh/uv/install.sh | sh
+        ```
+    === "Windows"
+        ``` sh
+        powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
+        ```
+
+=== "uv"
+    ``` sh
+    uv add calllogdb
+    ```
+
+=== "pip"
+    ``` sh
+    pip install calllogdb
+    ```
+
+---
+
+## Основные возможности
+
+Библиотека получает данные о звонках (`call_log`) из виртуальной АТС (`ВАТС`), выполняет базовую нормализацию всех элементов звонка и сохраняет их в базу данных в формате, оптимизированном для последующей агрегации и преобразования.
+
+!!! tip "Совет"
+    Лучше всего зараене создать БД и схему в которой библиотека создаст все необходимые ей таблицы.
+    Не забыайте выдать необходимые права пользователю через котрого будет осуществляться подключение
+
+---
