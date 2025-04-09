@@ -1,0 +1,23 @@
+site_name: CallLogDB
+theme:
+  name: material
+  features:
+    - navigation.tabs
+    - content.code.copy
+    - content.code.annotate
+markdown_extensions:
+  - codehilite
+  - pymdownx.superfences
+  - pymdownx.highlight
+nav:
+  - Главная: index.md
+  - Установка: installation.md
+  - Использование: usage.md
+  - API:
+      - Обзор API: api_reference.md
+      - Модули:
+          - API клиент: modules/api.md
+          - Конфиги: modules/core.md
+          - База данных: modules/db.md
+          - Типы данных: modules/types.md
+          - Утилиты: modules/utils.md
