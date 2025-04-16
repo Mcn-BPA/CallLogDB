@@ -105,7 +105,9 @@ class CallLog:
         logger.debug("Параметры запроса для месяца: {}", asdict(params))
         self.__requests(params)
 
-    def get_data_from_day(self, day: int, *, year: int = DateParams().year, month: int = DateParams().month) -> None:
+    def get_data_from_day(
+        self, day: int = DateParams().day, *, year: int = DateParams().year, month: int = DateParams().month
+    ) -> None:
         logger.info("Получение данных за день: {}-{}-{}", year, month, day)
         params = RequestParams(
             date_from=DateParams(year=year, month=month, day=day, hour=0).date,

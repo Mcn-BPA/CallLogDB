@@ -57,6 +57,19 @@ def setup_logging(
     logger.remove()
 
     if log_file:
-        logger.add(log_file, rotation="1 MB", retention="7 days", compression="zip", level=log_level)
+        log_dir: str = os.path.dirname(log_file)
+        if log_dir and not os.path.exists(log_dir):
+            os.makedirs(log_dir, exist_ok=True)
+
+        logger.add(
+            log_file,
+            rotation="00:00",  # Ротация каждый день в полночь
+            retention="7 days",  # Храним 7 дней логи
+            compression="zip",  # Архивируем старые логи
+            level=log_level,
+            enqueue=True,  # Логируем через очередь
+            backtrace=True,  # Красивый полный traceback при ошибках
+            diagnose=True,  # Подробный вывод локальных переменных при ошибках
+        )
     else:
-        logger.add(sys.stderr, level=log_level)
+        logger.add(sys.stderr, level=log_level, backtrace=True, diagnose=True)
