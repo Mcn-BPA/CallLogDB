@@ -53,7 +53,12 @@
 # def test_gpt_event_from_dict(mock_data):
 #     data = {
 #         "event_additional_info": {
-#             "api_vars": "{account_id:133429,num_a:12396,num_b:88002344499,call_id:116-1741694432.6016962,num_c:null,short_num_found:false,vpbx_id:16884,scenario_id:34056,scenario_counter:1,scenario_client_variables_1:{short_num_found:false,vpbx_id:16884},scenario_id_1:34056,dest_link_name:,did:12396,dtmf:,ivr_object_id:318,ivr_schema_id:34056,linked_id:116-1741694432.6016962,robocall_id:0,robocall_target_number:,robocall_task_contact_id:0,robocall_task_id:0,stt_answer:,n8n_success:true}"
+#             "api_vars": """{account_id:133429,num_a:12396,num_b:88002344499,call_id:116-1741694432.6016962,num_c:null,
+#             short_num_found:false,vpbx_id:16884,scenario_id:34056,scenario_counter:1,
+#             scenario_client_variables_1:{short_num_found:false,vpbx_id:16884},
+#             scenario_id_1:34056,dest_link_name:,did:12396,dtmf:,ivr_object_id:318,
+#             ivr_schema_id:34056,linked_id:116-1741694432.6016962,robocall_id:0,
+#             robocall_target_number:,robocall_task_contact_id:0,robocall_task_id:0,stt_answer:,n8n_success:true}"""
 #         }
 #     }
 #     event = GptEvent.from_dict(data)
@@ -122,7 +127,13 @@
 #             GptEvent,
 #             {
 #                 "event_additional_info": {
-#                     "api_vars": "{account_id:133429,num_a:12396,num_b:88002344499,call_id:116-1741694432.6016962,num_c:null,short_num_found:false,vpbx_id:16884,scenario_id:34056,scenario_counter:1,scenario_client_variables_1:{short_num_found:false,vpbx_id:16884},scenario_id_1:34056,dest_link_name:,did:12396,dtmf:,ivr_object_id:318,ivr_schema_id:34056,linked_id:116-1741694432.6016962,robocall_id:0,robocall_target_number:,robocall_task_contact_id:0,robocall_task_id:0,stt_answer:,n8n_success:true}"
+#                     "api_vars": """{account_id:133429,num_a:12396,num_b:88002344499,call_id:116-1741694432.6016962,
+#                     num_c:null,short_num_found:false,vpbx_id:16884,scenario_id:34056,scenario_counter:1,
+#                     scenario_client_variables_1:{short_num_found:false,vpbx_id:16884},
+#                     scenario_id_1:34056,dest_link_name:,did:12396,dtmf:,
+#                     ivr_object_id:318,ivr_schema_id:34056,linked_id:116-1741694432.6016962,
+#                     robocall_id:0,robocall_target_number:,
+#                     robocall_task_contact_id:0,robocall_task_id:0,stt_answer:,n8n_success:true}"""
 #                 }
 #             },
 #             {
@@ -155,7 +166,13 @@
 #             HTTPEvent,
 #             {
 #                 "event_additional_info": {
-#                     "api_vars": "{account_id:133429,num_a:12396,num_b:88002344499,call_id:116-1741694432.6016962,num_c:null,short_num_found:false,vpbx_id:16884,scenario_id:34056,scenario_counter:1,scenario_client_variables_1:{short_num_found:false,vpbx_id:16884},scenario_id_1:34056,dest_link_name:,did:12396,dtmf:,ivr_object_id:318,ivr_schema_id:34056,linked_id:116-1741694432.6016962,robocall_id:0,robocall_target_number:,robocall_task_contact_id:0,robocall_task_id:0,stt_answer:,n8n_success:true}"
+#                     "api_vars": """{account_id:133429,num_a:12396,num_b:88002344499,call_id:116-1741694432.6016962,
+#                     num_c:null,short_num_found:false,vpbx_id:16884,scenario_id:34056,scenario_counter:1,
+#                     scenario_client_variables_1:{short_num_found:false,vpbx_id:16884},
+#                     scenario_id_1:34056,dest_link_name:,did:12396,
+#                     dtmf:,ivr_object_id:318,ivr_schema_id:34056,
+#                     linked_id:116-1741694432.6016962,robocall_id:0,robocall_target_number:,
+#                     robocall_task_contact_id:0,robocall_task_id:0,stt_answer:,n8n_success:true}"""
 #                 }
 #             },
 #             {
