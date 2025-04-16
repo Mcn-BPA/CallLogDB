@@ -46,8 +46,8 @@ class Call:
     transfered_linked_to: bool = False
     events: list["EventBase"] = field(default_factory=list)
 
-    def __post_init__(self) -> None:
-        pass
+    # def __post_init__(self) -> None:
+    # pass
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> "Call":
@@ -77,6 +77,11 @@ class Call:
         mapped_data: dict[str, Any] = {_ALIASES.get(k, k): v for k, v in data.items()}
         # удаляем events чтобы он не попал в filtered_data
         events_data = mapped_data.pop("events", [])
+
+        # Приводим все пустые строки к None
+        for k, v in mapped_data.items():
+            if isinstance(v, str) and v.strip() == "":
+                mapped_data[k] = None
 
         # Конвертируем даты
         for date_field in ["answer_date", "call_date", "end_time"]:
