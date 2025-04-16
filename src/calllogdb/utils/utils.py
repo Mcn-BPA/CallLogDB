@@ -19,7 +19,7 @@ def _parse_datetime(date_str: str) -> datetime | None:
 
 
 def _parse_timedelta_seconds(value: int | str | None) -> timedelta | None:
-    if value is None:
+    if not value:
         return None
     return timedelta(seconds=int(value))
 

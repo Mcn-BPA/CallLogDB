@@ -7,7 +7,7 @@ from .calls import Calls
 from .event import UnknownEvent
 from .event_base import EventBase
 
-__all__ = [
+__all__: list[str] = [
     "Call",
     "Calls",
     "EventBase",
