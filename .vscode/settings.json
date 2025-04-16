@@ -233,10 +233,5 @@
       "multiline": true
     }
   ],
-  "explorer.excludeGitIgnore": false,
-  "python.testing.pytestArgs": [
-    "tests"
-  ],
-  "python.testing.unittestEnabled": false,
-  "python.testing.pytestEnabled": true
+  "explorer.excludeGitIgnore": false
 }

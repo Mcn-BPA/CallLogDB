@@ -2,7 +2,6 @@
 Файл для создания модуля программы
 """
 
-from .database import CallRepository, init_db, DatabaseSession, CallMapper, CallRepository
-from .models import Call, Date, Event, ApiVars
+from .database import CallRepository, init_db
 
-__all__ = ["CallRepository", "init_db", "DatabaseSession", "CallMapper", "CallRepository", "Call", "Date", "Event", "ApiVars"]
+__all__: list[str] = ["CallRepository", "init_db"]
