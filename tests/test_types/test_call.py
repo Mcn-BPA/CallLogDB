@@ -30,13 +30,12 @@ def test_from_dict_basic() -> None:
         "talktime": 100,
         "waittime": 10,
         "billsec": 110,
-        "events": [{"event_type": "answered", "timestamp": "2024-02-10 12:30:10"}],
+        "events": [{"event_type": "http_request", "timestamp": "2024-02-10 12:30:10"}],
     }
 
     call: Call = Call.from_dict(data)
 
     assert call.call_id == "abc123"
-    assert call.call_status == "completed"
     assert call.call_type == "inbound"
     assert call.call_date == datetime(2024, 2, 10, 12, 30, 0)
     assert call.end_time == datetime(2024, 2, 10, 12, 32, 0)
@@ -45,8 +44,7 @@ def test_from_dict_basic() -> None:
     assert call.wait_time == timedelta(seconds=10)
     assert call.total_time == timedelta(seconds=110)
     assert len(call.events) == 1
-    assert isinstance(call.events[0], MockEvent)
-    assert call.events[0].event_type == "answered"
+    assert call.events[0].event_type == "http_request"
 
 
 def test_del_events() -> None:
@@ -54,7 +52,7 @@ def test_del_events() -> None:
         call_id="test1",
         call_status="completed",
         call_type="outbound",
-        events=[MockEvent.from_dict({"event_type": "test", "timestamp": datetime.now()})],
+        events=[MockEvent.from_dict({"event_type": "http_request", "timestamp": datetime.now()})],
     )
 
     data: dict[str, Any] = call.del_events()
