@@ -69,7 +69,7 @@ class CallLog:
     Основной класс работы с call_log
     """
 
-    config: Config = Config()
+    config: Config = field(default_factory=Config)
 
     # ---------- Общая функция ----------
     def __requests(self, params: RequestParams) -> None:
