@@ -1,14 +1,12 @@
 from datetime import datetime, timedelta
 
-from sqlalchemy import Boolean, DateTime, ForeignKey, ForeignKeyConstraint, Integer, Interval, MetaData, Text
+from sqlalchemy import Boolean, DateTime, ForeignKey, ForeignKeyConstraint, Integer, Interval, Text
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 
-from calllogdb.core import config
-
 
 class Base(DeclarativeBase):
-    metadata = MetaData(schema=config.schema)
+    pass
 
 
 # Модель звонков
@@ -35,6 +33,7 @@ class Call(Base):
     wait_time: Mapped[timedelta | None] = mapped_column(Interval)
     talk_time: Mapped[timedelta | None] = mapped_column(Interval)
     vpbx_id: Mapped[str | None] = mapped_column(Text)
+    ls_number: Mapped[str | None] = mapped_column(Text)
     transfered_linked_to: Mapped[bool] = mapped_column(Boolean, nullable=False, server_default="false")
 
     # Связь "один-к-одному" с моделью Date

@@ -44,6 +44,7 @@ class Call:
     talk_time: timedelta | None = None
     vpbx_id: int | None = None
     transfered_linked_to: bool = False
+    ls_number: str | None = None
     events: list["EventBase"] = field(default_factory=list)
 
     # def __post_init__(self) -> None:
@@ -95,6 +96,9 @@ class Call:
 
         # Фильтруем только допустимые поля
         filtered_data: dict[str, Any] = {k: v for k, v in mapped_data.items() if k in call_fields}
+
+        # Простовляем флаг ЛС
+        # filtered_data["vpbx_id"] = подставить переменную из конфига
 
         return cls(
             events=[EventBase.from_dict(ed) for ed in events_data],
