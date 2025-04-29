@@ -21,7 +21,6 @@ def mock_env() -> Generator[None, Any, None]:
             "DB_PASSWORD": "password",
             "DB_NAME": "test_db",
             "DB_SCHEMA": "public",
-            "LOG_LEVEL": "INFO",
         },
     ):
         yield
@@ -39,7 +38,6 @@ def test_config() -> None:
     assert config.password == "password"
     assert config.database == "test_db"
     assert config.schema == "public"
-    assert config.log_level == "INFO"
 
 
 def test_missing_required_vars() -> None:
