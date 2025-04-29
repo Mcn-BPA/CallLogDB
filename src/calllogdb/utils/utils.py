@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
 
 
-def _parse_datetime(date_str: str) -> datetime | None:
+def _parse_datetime(date_str: str | None) -> datetime | None:
     """
     Преобразует строку в datetime объект, если строка соответствует формату "%Y-%m-%d %H:%M:%S".
     Возвращает None, если строка не может быть преобразована.
@@ -12,6 +12,8 @@ def _parse_datetime(date_str: str) -> datetime | None:
     Returns:
         (datetime | None): Преобразованный datetime объект или None, если формат неправильный.
     """
+    if not date_str:
+        return None
     try:
         return datetime.strptime(date_str, "%Y-%m-%d %H:%M:%S")
     except ValueError:

@@ -5,16 +5,17 @@ from loguru import logger
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
 
-from calllogdb.core import config
+from calllogdb.core import Config
 
 
 class APIClient:
-    def __init__(self, url: str = config.url, token: str = config.token, retries_enabled: bool = True) -> None:
+    def __init__(self, config: Config, retries_enabled: bool = True) -> None:
         """
         Инициализация клиента для работы с API.
         """
-        self.url: str = url
-        self.token: str = token
+        self.config: Config = config
+        self.url: str = config.url or ""
+        self.token: str = config.token or ""
         self.session = requests.Session()
         self.session.headers.update(
             {
