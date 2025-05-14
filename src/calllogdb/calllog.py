@@ -6,6 +6,7 @@ from dateutil.relativedelta import relativedelta
 from loguru import logger
 
 from calllogdb.api import APIClient
+from calllogdb.core import Config
 from calllogdb.db import CallRepository
 from calllogdb.db.database import CallMapper
 from calllogdb.db.models import Call
@@ -62,16 +63,18 @@ class RequestParams:
         )
 
 
-@dataclass(kw_only=True)
+@dataclass
 class CallLog:
     """
     Основной класс работы с call_log
     """
 
-    @staticmethod
-    def __requests(params: RequestParams) -> None:
+    config: Config = field(default_factory=Config)
+
+    # ---------- Общая функция ----------
+    def __requests(self, params: RequestParams) -> None:
         logger.info("Начало запроса данных с параметрами: {}", asdict(params))
-        with APIClient() as api:
+        with APIClient(self.config) as api:
             response_list: list[dict[str, Any]] = []
             while True:
                 logger.debug("Отправка запроса с параметрами: {}", asdict(params))
@@ -86,6 +89,8 @@ class CallLog:
         logger.info("Общее количество полученных элементов: {}", len(response_list))
 
         data_calls: Calls = Calls.from_dict(response_list)
+        for c in data_calls.calls:
+            c.ls_number = self.config.ls_number
         logger.info("Преобразование данных в объект Calls завершено")
 
         mapper = CallMapper()
@@ -93,7 +98,7 @@ class CallLog:
         mapped_calls: list[Call] = [mapper.map(call_data) for call_data in data_calls.calls]
         logger.info("Маппинг завершен: получено {} объектов Call", len(mapped_calls))
 
-        CallRepository().save_many(mapped_calls)
+        CallRepository(self.config).save_many(mapped_calls)
         logger.info("Сохранение объектов Call завершено")
 
     def get_data_from_month(self, month: int, *, year: int = DateParams().year) -> None:

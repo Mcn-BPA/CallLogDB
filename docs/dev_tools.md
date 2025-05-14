@@ -2,6 +2,7 @@
 
 ## uv
 
+Установка менеджера пакетов uv
 === "macOS and Linux"
     ``` sh
     curl -LsSf https://astral.sh/uv/install.sh | sh

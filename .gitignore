@@ -7,6 +7,8 @@ wheels/
 *.egg-info/
 .pypirc
 .env
+settings.yml
+settings.yaml
 
 # Virtual environments
 .venv
