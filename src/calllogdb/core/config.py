@@ -35,15 +35,15 @@ class Config:
 
     # ---------- Инициализация из ENV ----------
     def __post_init__(self) -> None:
-        if self._source == "env":  # старая логика → без изменений
-            self.url = self.url or os.getenv("CALL_LOG_URL")
+        if self._source == "env":
+            self.url = self.url or os.getenv("URL")
             self.token = self.token or os.getenv("TOKEN")
-            self.host = self.host or os.getenv("DB_HOST", "localhost")
-            self.port = self.port or int(os.getenv("DB_PORT", 5432))
-            self.user = self.user or os.getenv("DB_USER")
-            self.password = self.password or os.getenv("DB_PASSWORD")
-            self.database = self.database or os.getenv("DB_NAME")
-            self.schema = self.schema or os.getenv("DB_SCHEMA", "public")
+            self.host = self.host or os.getenv("HOST", "localhost")
+            self.port = self.port or int(os.getenv("PORT", 5432))
+            self.user = self.user or os.getenv("USER")
+            self.database = self.database or os.getenv("DATABASE")
+            self.password = self.password or os.getenv("PASSWORD")
+            self.schema = self.schema or os.getenv("SCHEMA", "public")
             self.ls_number = self.ls_number or os.getenv("LS_NUMBER")
 
         missing: list[str] = [n for n in ("user", "password", "database") if not getattr(self, n)]
