@@ -8,6 +8,7 @@ wheels/
 .pypirc
 .env
 settings.yml
+settings.yaml
 
 # Virtual environments
 .venv

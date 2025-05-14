@@ -1,4 +1,8 @@
 site_name: CallLogDB
+site_url: https://mcn-bpa.github.io/CallLogDB/
+repo_url: https://github.com/mcn-bpa/CallLogDB
+repo_name: GitHub
+
 theme:
   name: material
   features:
@@ -21,9 +25,16 @@ theme:
         icon: material/weather-sunny
         name: Переключить на светлую тему
 
-repo_url: https://github.com/mcn-bpa/CallLogDB
-repo_name: GitHub
-repo_icon: fontawesome/brands/github
+nav:
+  - Главная: index.md
+  - Использование: usage.md
+  - Модули:
+      - API клиент: modules/api.md
+      - Конфиги: modules/core.md
+      - База данных: modules/db.md
+      - Типы данных: modules/types.md
+      - Утилиты: modules/utils.md
+  - Dev Tools: dev_tools.md
 
 markdown_extensions:
   - codehilite
@@ -38,14 +49,3 @@ markdown_extensions:
   - pymdownx.details
   - pymdownx.snippets
   - pymdownx.keys
-
-nav:
-  - Главная: index.md
-  - Использование: usage.md
-  - Модули:
-      - API клиент: modules/api.md
-      - Конфиги: modules/core.md
-      - База данных: modules/db.md
-      - Типы данных: modules/types.md
-      - Утилиты: modules/utils.md
-  - Dev Tools: dev_tools.md
