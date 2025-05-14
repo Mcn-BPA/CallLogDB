@@ -8,6 +8,8 @@
       
       
       
+        <link rel="canonical" href="https://mcn-bpa.github.io/CallLogDB/usage/">
+      
       
         <link rel="prev" href="..">
       
@@ -16,7 +18,7 @@
       
       
       <link rel="icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.11">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.14">
     
     
       
@@ -24,7 +26,7 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.4af4bdda.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.342714a4.min.css">
       
         
         <link rel="stylesheet" href="../assets/stylesheets/palette.06af60db.min.css">
@@ -328,7 +330,91 @@
         <li class="md-nav__item">
   <a href="#_1" class="md-nav__link">
     <span class="md-ellipsis">
-      Пример создания подключения к базе данных
+      Настройка конфигурации
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Настройка конфигурации">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      Переменные файла конфигурации
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#calllog" class="md-nav__link">
+    <span class="md-ellipsis">
+      Методы класса CallLog
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Методы класса CallLog">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#get_data_from_month" class="md-nav__link">
+    <span class="md-ellipsis">
+      get_data_from_month
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#get_data_from_day" class="md-nav__link">
+    <span class="md-ellipsis">
+      get_data_from_day
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#get_data_from_hours" class="md-nav__link">
+    <span class="md-ellipsis">
+      get_data_from_hours
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#get_data_for_interval" class="md-nav__link">
+    <span class="md-ellipsis">
+      get_data_for_interval
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      Как это работает под капотом
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      Отладка
     </span>
   </a>
   
@@ -553,7 +639,91 @@
         <li class="md-nav__item">
   <a href="#_1" class="md-nav__link">
     <span class="md-ellipsis">
-      Пример создания подключения к базе данных
+      Настройка конфигурации
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Настройка конфигурации">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      Переменные файла конфигурации
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#calllog" class="md-nav__link">
+    <span class="md-ellipsis">
+      Методы класса CallLog
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Методы класса CallLog">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#get_data_from_month" class="md-nav__link">
+    <span class="md-ellipsis">
+      get_data_from_month
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#get_data_from_day" class="md-nav__link">
+    <span class="md-ellipsis">
+      get_data_from_day
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#get_data_from_hours" class="md-nav__link">
+    <span class="md-ellipsis">
+      get_data_from_hours
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#get_data_for_interval" class="md-nav__link">
+    <span class="md-ellipsis">
+      get_data_for_interval
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      Как это работает под капотом
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      Отладка
     </span>
   </a>
   
@@ -579,8 +749,181 @@
 
 
 <h1 id="calllogdb">Использование CallLogDB</h1>
-<h2 id="_1">Пример создания подключения к базе данных</h2>
-<p>пример ...</p>
+<h2 id="_1">Настройка конфигурации</h2>
+<p>Начиная с <code>v0.2.0</code>, CallLogDB принимает два способа конфигурации: <strong><code>.env</code></strong> и <strong><code>YAML</code></strong>.</p>
+<details class="question">
+<summary>Какой способ выбрать?</summary>
+<ul>
+<li><strong><code>env</code></strong> — один ЛС и одна база данных.</li>
+<li><strong><code>yaml</code></strong> — два или более ЛС или несколько баз данных.</li>
+</ul>
+</details>
+<h3 id="_2">Переменные файла конфигурации</h3>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">.env</label><label for="__tabbed_1_2">YAML</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code>URL=
+TOKEN=&quot;&quot;
+
+HOST=
+PORT=
+USER=
+DATABASE=
+PASSWORD=
+SCHEMA=
+
+LS_NUMBER=
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="nt">tag_name1</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;&quot;</span>
+<span class="w">  </span><span class="nt">token</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;&quot;</span>
+
+<span class="w">  </span><span class="nt">host</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">port</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">user</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">database</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">password</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">schema</span><span class="p">:</span>
+
+<span class="w">  </span><span class="nt">ls_number</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;&quot;</span>
+<span class="nt">tag_name2</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;&quot;</span>
+<span class="w">  </span><span class="nt">token</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;&quot;</span>
+
+<span class="w">  </span><span class="nt">host</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">port</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">user</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">database</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">password</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">schema</span><span class="p">:</span>
+
+<span class="w">  </span><span class="nt">ls_number</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;&quot;</span>
+</code></pre></div>
+</div>
+</div>
+</div>
+<details class="example">
+<summary>Пример реализации</summary>
+<div class="tabbed-set tabbed-alternate" data-tabs="2:2"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio" /><input id="__tabbed_2_2" name="__tabbed_2" type="radio" /><div class="tabbed-labels"><label for="__tabbed_2_1">.env</label><label for="__tabbed_2_2">YAML</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">calllogdb</span><span class="w"> </span><span class="kn">import</span> <span class="n">calllogdb</span>
+
+<span class="n">calllogdb</span><span class="p">()</span><span class="o">.</span><span class="n">get_data_from_hours</span><span class="p">()</span>
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">calllogdb</span><span class="w"> </span><span class="kn">import</span> <span class="n">Config</span><span class="p">,</span> <span class="n">calllogdb</span>
+
+<span class="n">config</span> <span class="o">=</span> <span class="n">Config</span><span class="o">.</span><span class="n">from_yaml</span><span class="p">(</span><span class="s2">&quot;settings.yaml&quot;</span><span class="p">,</span> <span class="n">profile</span><span class="o">=</span><span class="s2">&quot;tag_name1&quot;</span><span class="p">)</span>
+<span class="n">calllogdb</span><span class="p">(</span><span class="n">config</span><span class="p">)</span><span class="o">.</span><span class="n">get_data_from_hours</span><span class="p">()</span>
+</code></pre></div>
+</div>
+</div>
+</div>
+</details>
+<hr />
+<h2 id="calllog">Методы класса <code>CallLog</code></h2>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">calllogdb</span><span class="w"> </span><span class="kn">import</span> <span class="n">calllogdb</span>
+
+<span class="n">clog</span> <span class="o">=</span> <span class="n">calllogdb</span><span class="p">()</span>  <span class="c1"># либо calllogdb(config) если используете YAML</span>
+</code></pre></div>
+<h3 id="get_data_from_month"><code>get_data_from_month</code></h3>
+<p><strong>Аргументы</strong>:</p>
+<ul>
+<li><code>month</code> (<code>int</code>) — номер месяца (от <code>1</code> до <code>12</code>).</li>
+<li><code>year</code> (<code>int</code>, опционально) — год. По умолчанию берётся <code>datetime.now().year</code>.</li>
+</ul>
+<p>Забирает звонки за <strong>весь календарный месяц</strong>.<br />
+Использует первый день месяца <code>00:00</code> как <code>date_from</code> и первый день <em>следующего</em> месяца <code>00:00</code> как <code>date_to</code>.</p>
+<details class="example">
+<summary>Пример</summary>
+<div class="highlight"><pre><span></span><code><span class="c1"># май 2025</span>
+<span class="n">clog</span><span class="o">.</span><span class="n">get_data_from_month</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="n">year</span><span class="o">=</span><span class="mi">2025</span><span class="p">)</span>
+</code></pre></div>
+</details>
+<h3 id="get_data_from_day"><code>get_data_from_day</code></h3>
+<p><strong>Аргументы</strong>:</p>
+<ul>
+<li><code>day</code> (<code>int</code>) — день месяца. По умолчанию сегодня.</li>
+<li><code>month</code> (<code>int</code>, опционально) — месяц. По умолчанию текущий месяц.</li>
+<li><code>year</code> (<code>int</code>, опционально) — год. По умолчанию текущий год.</li>
+</ul>
+<p>Берёт звонки за <strong>конкретный день</strong>.<br />
+Диапазон <code>[день 00:00, день+1 00:00)</code>.</p>
+<details class="example">
+<summary>Пример</summary>
+<div class="highlight"><pre><span></span><code><span class="c1"># вчера</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span>
+<span class="n">yesterday</span> <span class="o">=</span> <span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span> <span class="o">-</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">day</span>
+<span class="n">clog</span><span class="o">.</span><span class="n">get_data_from_day</span><span class="p">(</span><span class="n">yesterday</span><span class="p">)</span>
+</code></pre></div>
+</details>
+<h3 id="get_data_from_hours"><code>get_data_from_hours</code></h3>
+<p><strong>Аргументы</strong>:</p>
+<ul>
+<li><code>hour</code> (<code>int</code>) — сколько часов назад брать данные. 1 — последний час.</li>
+</ul>
+<p>Самый быстрый способ подтащить свежее.<br />
+Берёт всё, что накопилось за последние <code>hour</code> часов, где <code>hour</code> ≤ 24.</p>
+<details class="tip">
+<summary>Лайфхак</summary>
+<p>Если ставишь <code>hour=168</code>, то это неделя. Но держи в голове лимит API ― запросов много, но лимит всё ещё жёсткий.</p>
+</details>
+<details class="example">
+<summary>Пример</summary>
+<div class="highlight"><pre><span></span><code><span class="n">clog</span><span class="o">.</span><span class="n">get_data_from_hours</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>  <span class="c1"># последние 3 часа</span>
+</code></pre></div>
+</details>
+<h3 id="get_data_for_interval"><code>get_data_for_interval</code></h3>
+<p><strong>Аргументы</strong>:</p>
+<ul>
+<li><code>date_from</code> (<code>datetime</code>) — начало интервала.</li>
+<li><code>date_to</code> (<code>datetime</code>) — конец интервала.</li>
+</ul>
+<p>Полный контроль ― ты сам задаёшь диапазон <code>datetime</code>.<br />
+Никакой магии, просто проксируем напрямую в API.</p>
+<details class="danger">
+<summary>Валидация на твоей стороне</summary>
+<p>Метод не проверяет, что <code>date_to</code> &gt; <code>date_from</code>. Собака ест, что кладёшь. Будь внимательнее.</p>
+</details>
+<details class="example">
+<summary>Пример</summary>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span>
+
+<span class="n">start</span> <span class="o">=</span> <span class="n">datetime</span><span class="p">(</span><span class="mi">2025</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<span class="n">end</span>   <span class="o">=</span> <span class="n">datetime</span><span class="p">(</span><span class="mi">2025</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+
+<span class="n">clog</span><span class="o">.</span><span class="n">get_data_for_interval</span><span class="p">(</span><span class="n">date_from</span><span class="o">=</span><span class="n">start</span><span class="p">,</span> <span class="n">date_to</span><span class="o">=</span><span class="n">end</span><span class="p">)</span>
+</code></pre></div>
+</details>
+<hr />
+<h2 id="_3">Как это работает под капотом</h2>
+<blockquote>
+<p>TL;DR: <code>CallLog</code> дергает <strong>API</strong>, прогоняет ответы через <code>Calls</code> → <code>CallMapper</code> и кидает пачку в <code>CallRepository</code>. Всё логируется через <strong>loguru</strong>.  </p>
+</blockquote>
+<ol>
+<li><strong>Запросы</strong> ― пока API отдаёт пачки по <code>limit</code> (по умолчанию <code>2000</code>), метод <code>__requests</code> крутит цикл и собирает всё в список.  </li>
+<li><strong>Преобразование</strong> ― JSON превращается в <code>Calls</code>, каждому звонку прописывается <code>ls_number</code> из конфига.  </li>
+<li><strong>Маппинг</strong> ― <code>CallMapper</code> кастует DTO в ORM-модель <code>Call</code>.  </li>
+<li><strong>Сохранение</strong> ― <code>CallRepository.save_many</code> кладёт данные в Postgres (или что настроил).  </li>
+</ol>
+<p>Никаких лишних аллокаций, максимум логов ― чтобы потом легче было рыдать в проде.</p>
+<hr />
+<h2 id="_4">Отладка</h2>
+<p>Управлять уровнем ллогирования можно через функцию <code>setup_logging()</code></p>
+<details class="example">
+<summary>Пример</summary>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">calllogdb</span><span class="w"> </span><span class="kn">import</span> <span class="n">setup_logging</span>
+
+<span class="n">setup_logging</span><span class="p">(</span><span class="s1">&#39;DEBUG&#39;</span><span class="p">)</span>
+</code></pre></div>
+</details>
+<p>Логи покажут каждый шаг: параметры запроса, количество полученных элементов, и что именно улетело в базу.</p>
+<hr />
+<p><small>Любые баги можно кидать в <a href="https://github.com/mcn-bpa/CallLogDB/issues">https://github.com/mcn-bpa/CallLogDB/issues</a>.</small></p>
 
 
 
@@ -629,10 +972,10 @@
     
     
       
-      <script id="__config" type="application/json">{"base": "..", "features": ["content.code.copy", "content.code.annotate"], "search": "../assets/javascripts/workers/search.f8cc74c7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"base": "..", "features": ["content.code.copy", "content.code.annotate"], "search": "../assets/javascripts/workers/search.d50fe291.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../assets/javascripts/bundle.c8b220af.min.js"></script>
+      <script src="../assets/javascripts/bundle.13a4f30d.min.js"></script>
       
     
   </body>

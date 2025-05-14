@@ -1,3 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    <url>
+         <loc>https://mcn-bpa.github.io/CallLogDB/</loc>
+         <lastmod>2025-05-14</lastmod>
+    </url>
+    <url>
+         <loc>https://mcn-bpa.github.io/CallLogDB/dev_tools/</loc>
+         <lastmod>2025-05-14</lastmod>
+    </url>
+    <url>
+         <loc>https://mcn-bpa.github.io/CallLogDB/usage/</loc>
+         <lastmod>2025-05-14</lastmod>
+    </url>
+    <url>
+         <loc>https://mcn-bpa.github.io/CallLogDB/modules/api/</loc>
+         <lastmod>2025-05-14</lastmod>
+    </url>
+    <url>
+         <loc>https://mcn-bpa.github.io/CallLogDB/modules/core/</loc>
+         <lastmod>2025-05-14</lastmod>
+    </url>
+    <url>
+         <loc>https://mcn-bpa.github.io/CallLogDB/modules/db/</loc>
+         <lastmod>2025-05-14</lastmod>
+    </url>
+    <url>
+         <loc>https://mcn-bpa.github.io/CallLogDB/modules/types/</loc>
+         <lastmod>2025-05-14</lastmod>
+    </url>
+    <url>
+         <loc>https://mcn-bpa.github.io/CallLogDB/modules/utils/</loc>
+         <lastmod>2025-05-14</lastmod>
+    </url>
 </urlset>
